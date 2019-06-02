@@ -6,6 +6,8 @@
 
 #include <CubbyCity/CubbyCity.hpp>
 
+#include <string>
+
 namespace CubbyCity
 {
 void CubbyCity::Process()
@@ -14,4 +16,21 @@ void CubbyCity::Process()
 
     // Download data
 }
+
+std::string CubbyCity::GetVectorTileURL(const Tile& tile,
+                                        const std::string& apiKey) const
+{
+    return "https://tile.nextzen.org/tilezen/vector/v1/256/all/" +
+           std::to_string(tile.z) + "/" + std::to_string(tile.x) + "/" +
+           std::to_string(tile.y) + ".json?api_key=" + apiKey;
+}
+
+std::string CubbyCity::GetTerrainURL(const Tile& tile,
+                                     const std::string& apiKey) const
+{
+    return "https://tile.nextzen.org/tilezen/terrain/v1/260/terrarium/" +
+           std::to_string(tile.z) + "/" + std::to_string(tile.x) + "/" +
+           std::to_string(tile.y) + ".png?api_key=" + apiKey;
+}
+
 }  // namespace CubbyCity

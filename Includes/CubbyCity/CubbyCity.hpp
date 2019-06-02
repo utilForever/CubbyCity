@@ -7,12 +7,22 @@
 #ifndef CUBBYCITY_HPP
 #define CUBBYCITY_HPP
 
+#include <CubbyCity/Geometry/Tile.hpp>
+
+#include <string>
+
 namespace CubbyCity
 {
 class CubbyCity
 {
  public:
     void Process();
+
+ private:
+    std::string GetVectorTileURL(const Tile& tile,
+                                 const std::string& apiKey) const;
+    std::string GetTerrainURL(const Tile& tile,
+                              const std::string& apiKey) const;
 };
 }  // namespace CubbyCity
 
