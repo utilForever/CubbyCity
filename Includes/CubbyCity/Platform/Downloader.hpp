@@ -4,8 +4,8 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
-#ifndef CUBBYCITY_DOWNLOADER_H
-#define CUBBYCITY_DOWNLOADER_H
+#ifndef CUBBYCITY_DOWNLOADER_HPP
+#define CUBBYCITY_DOWNLOADER_HPP
 
 #include <string>
 
@@ -18,4 +18,4 @@ class Downloader
 };
 }  // namespace CubbyCity
 
-#endif
+#endif  // CUBBYCITY_DOWNLOADER_HPP
