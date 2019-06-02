@@ -4,29 +4,12 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
-#include <CubbyCity/Platform/WindowsDownloader.hpp>
+#include <CubbyCity/CubbyCity.hpp>
 
-#include <iostream>
-
-using namespace CubbyCity;
-
-int main(int argc, char* argv[])
+int main()
 {
-    if (argc != 2)
-    {
-        return EXIT_FAILURE;
-    }
-
-    WindowsDownloader downloader;
-    std::string out;
-    std::string url =
-        "https://tile.nextzen.org/tilezen/vector/v1/512/all/16/19293/"
-        "24641.json?api_key=" +
-        std::string(argv[1]);
-
-    downloader.DownloadData(out, url);
-
-    std::cout << out << '\n';
+    CubbyCity::CubbyCity city;
+    city.Process();
 
     return 0;
 }
