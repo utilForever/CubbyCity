@@ -15,6 +15,14 @@
 
 namespace CubbyCity
 {
+enum Border
+{
+    Left,
+    Right,
+    Top,
+    Bottom
+};
+
 struct Tile
 {
     Tile(int _x, int _y, int _z) : x(_x), y(_y), z(_z)
