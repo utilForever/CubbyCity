@@ -5,12 +5,19 @@
 // property of any third parties.
 
 #include <CubbyCity/Programs/Program.hpp>
+#include <CubbyCity/Programs/ProgramConfig.hpp>
 
 using namespace CubbyCity;
 
 int main()
 {
-    Program program;
+    ProgramConfig config;
+    config.apiKey = "ZhvAFy8gTZSk6sPnAn_KwA";
+    config.tileX = "19294";
+    config.tileY = "24642";
+    config.tileZ = 16;
+
+    Program program(config);
     program.Process();
 
     return 0;
