@@ -4,12 +4,14 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
-#include <CubbyCity/CubbyCity.hpp>
+#include <CubbyCity/Programs/Program.hpp>
+
+using namespace CubbyCity;
 
 int main()
 {
-    CubbyCity::CubbyCity city;
-    city.Process();
+    Program program;
+    program.Process();
 
     return 0;
 }
