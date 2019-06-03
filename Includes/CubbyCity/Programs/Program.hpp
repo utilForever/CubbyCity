@@ -4,8 +4,8 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
-#ifndef CUBBYCITY_HPP
-#define CUBBYCITY_HPP
+#ifndef CUBBYCITY_PROGRAM_HPP
+#define CUBBYCITY_PROGRAM_HPP
 
 #include <CubbyCity/Geometry/Tile.hpp>
 
@@ -13,7 +13,7 @@
 
 namespace CubbyCity
 {
-class CubbyCity
+class Program
 {
  public:
     void Process();
@@ -26,4 +26,4 @@ class CubbyCity
 };
 }  // namespace CubbyCity
 
-#endif  // CUBBYCITY_HPP
+#endif  // CUBBYCITY_PROGRAM_HPP

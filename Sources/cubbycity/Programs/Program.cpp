@@ -4,29 +4,29 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
-#include <CubbyCity/CubbyCity.hpp>
+#include <CubbyCity/Programs/Program.hpp>
 
 #include <string>
 
 namespace CubbyCity
 {
-void CubbyCity::Process()
+void Program::Process()
 {
     // Parse tile
 
     // Download data
 }
 
-std::string CubbyCity::GetVectorTileURL(const Tile& tile,
-                                        const std::string& apiKey) const
+std::string Program::GetVectorTileURL(const Tile& tile,
+                                      const std::string& apiKey) const
 {
     return "https://tile.nextzen.org/tilezen/vector/v1/256/all/" +
            std::to_string(tile.z) + "/" + std::to_string(tile.x) + "/" +
            std::to_string(tile.y) + ".json?api_key=" + apiKey;
 }
 
-std::string CubbyCity::GetTerrainURL(const Tile& tile,
-                                     const std::string& apiKey) const
+std::string Program::GetTerrainURL(const Tile& tile,
+                                   const std::string& apiKey) const
 {
     return "https://tile.nextzen.org/tilezen/terrain/v1/260/terrarium/" +
            std::to_string(tile.z) + "/" + std::to_string(tile.x) + "/" +
