@@ -7,9 +7,15 @@
 #include <CubbyCity/Programs/Program.hpp>
 
 #include <string>
+#include <utility>
 
 namespace CubbyCity
 {
+Program::Program(ProgramConfig config) : m_config(std::move(config))
+{
+    // Do nothing
+}
+
 void Program::Process()
 {
     // Parse tile

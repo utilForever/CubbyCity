@@ -8,6 +8,7 @@
 #define CUBBYCITY_PROGRAM_HPP
 
 #include <CubbyCity/Geometry/Tile.hpp>
+#include <CubbyCity/Programs/ProgramConfig.hpp>
 
 #include <string>
 
@@ -16,6 +17,8 @@ namespace CubbyCity
 class Program
 {
  public:
+    Program(ProgramConfig config);
+
     void Process();
 
  private:
@@ -23,6 +26,8 @@ class Program
                                  const std::string& apiKey) const;
     std::string GetTerrainURL(const Tile& tile,
                               const std::string& apiKey) const;
+
+    ProgramConfig m_config;
 };
 }  // namespace CubbyCity
 
