@@ -4,10 +4,10 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
+#include <CubbyCity/Commons/Utils.hpp>
 #include <CubbyCity/Programs/Program.hpp>
 
-#include <string>
-#include <utility>
+#include <vector>
 
 namespace CubbyCity
 {
@@ -19,6 +19,37 @@ Program::Program(ProgramConfig config) : m_config(std::move(config))
 void Program::Process()
 {
     // Parse tile
+    std::vector<Tile> tiles;
+
+    auto [startX, endX] = ExtractTileRange(m_config.tileX);
+    auto [startY, endY] = ExtractTileRange(m_config.tileY);
+
+    for (int x = startX; x <= endX; ++x)
+    {
+        for (int y = startY; y <= endY; ++y)
+        {
+            Tile t(x, y, m_config.tileZ);
+
+            if (x == startX)
+            {
+                t.borders.set(Border::Left, true);
+            }
+            if (x == endX)
+            {
+                t.borders.set(Border::Right, true);
+            }
+            if (y == startY)
+            {
+                t.borders.set(Border::Top, true);
+            }
+            if (y == endY)
+            {
+                t.borders.set(Border::Bottom, true);
+            }
+
+            tiles.emplace_back(t);
+        }
+    }
 
     // Download data
 }
