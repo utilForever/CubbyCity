@@ -22,11 +22,6 @@ class Program
     void Process();
 
  private:
-    std::string GetVectorTileURL(const Tile& tile,
-                                 const std::string& apiKey) const;
-    std::string GetTerrainURL(const Tile& tile,
-                              const std::string& apiKey) const;
-
     ProgramConfig m_config;
 };
 }  // namespace CubbyCity

@@ -53,21 +53,4 @@ void Program::Process()
 
     // Download data
 }
-
-std::string Program::GetVectorTileURL(const Tile& tile,
-                                      const std::string& apiKey) const
-{
-    return "https://tile.nextzen.org/tilezen/vector/v1/256/all/" +
-           std::to_string(tile.z) + "/" + std::to_string(tile.x) + "/" +
-           std::to_string(tile.y) + ".json?api_key=" + apiKey;
-}
-
-std::string Program::GetTerrainURL(const Tile& tile,
-                                   const std::string& apiKey) const
-{
-    return "https://tile.nextzen.org/tilezen/terrain/v1/260/terrarium/" +
-           std::to_string(tile.z) + "/" + std::to_string(tile.x) + "/" +
-           std::to_string(tile.y) + ".png?api_key=" + apiKey;
-}
-
 }  // namespace CubbyCity
