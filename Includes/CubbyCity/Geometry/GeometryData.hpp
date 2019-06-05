@@ -16,7 +16,7 @@
 
 namespace CubbyCity
 {
-using Point = glm::vec3;
+using Point = glm::dvec3;
 using Line = std::vector<Point>;
 using Polygon = std::vector<Line>;
 
