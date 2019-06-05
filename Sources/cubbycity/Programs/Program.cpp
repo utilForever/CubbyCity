@@ -5,8 +5,12 @@
 // property of any third parties.
 
 #include <CubbyCity/Commons/Utils.hpp>
+#include <CubbyCity/Geometry/GeometryData.hpp>
+#include <CubbyCity/Platform/DownloadUtils.hpp>
 #include <CubbyCity/Programs/Program.hpp>
 
+#include <memory>
+#include <unordered_map>
 #include <vector>
 
 namespace CubbyCity
@@ -52,5 +56,43 @@ void Program::Process()
     }
 
     // Download data
+    std::unordered_map<Tile, std::unique_ptr<HeightData>> heightData;
+    std::unordered_map<Tile, std::unique_ptr<TileData>> vectorTileData;
+
+    for (auto& tile : tiles)
+    {
+        if (m_config.terrain)
+        {
+            std::string url = GetTerrainURL(tile, m_config.apiKey);
+            auto textureData =
+                DownloadHeightmapTile(url, m_config.terrainExtrusionScale);
+
+            if (!textureData)
+            {
+                throw std::logic_error(
+                    "Failed to download heightmap texture data");
+            }
+
+            heightData[tile] = std::move(textureData);
+        }
+
+        if (m_config.buildings || m_config.roads)
+        {
+            std::string url = GetVectorTileURL(tile, m_config.apiKey);
+            auto tileData = DownloadTile(url, tile);
+
+            if (!tileData)
+            {
+                throw std::logic_error("Failed to download vector tile data");
+            }
+
+            vectorTileData[tile] = std::move(tileData);
+        }
+    }
+
+    // Adjust terrain edges
+    if (m_config.terrain)
+    {
+    }
 }
 }  // namespace CubbyCity
