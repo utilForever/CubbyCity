@@ -20,6 +20,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include_directories(Includes)
 include_directories(Libraries)
 include_directories(Libraries/glm)
+include_directories(Libraries/stb)
 
 # Compile options
 include(CMake/CompileOptions.cmake)
