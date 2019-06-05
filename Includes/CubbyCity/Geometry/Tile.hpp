@@ -35,6 +35,11 @@ struct Tile
         borders = 0;
     }
 
+    bool operator==(const Tile& rhs) const
+    {
+        return x == rhs.x && y == rhs.y && z == rhs.z;
+    }
+
     int x;
     int y;
     int z;
@@ -45,5 +50,18 @@ struct Tile
     glm::dvec2 tileOrigin;
 };
 }  // namespace CubbyCity
+
+namespace std
+{
+template <>
+struct hash<CubbyCity::Tile>
+{
+    size_t operator()(const CubbyCity::Tile& tile) const noexcept
+    {
+        return std::hash<int>()(tile.x) ^ std::hash<int>()(tile.y) ^
+               std::hash<int>()(tile.z);
+    }
+};
+}  // namespace std
 
 #endif  // CUBBYCITY_TILE_HPP
