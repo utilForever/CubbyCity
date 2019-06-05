@@ -20,7 +20,7 @@ struct ProgramConfig
     int tileZ;
 
     bool terrain;
-    int terrainSubdivision;
+    float terrainExtrusionScale;
 
     bool buildings;
     bool roads;

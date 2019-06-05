@@ -17,7 +17,7 @@ int main()
     config.tileY = "24642";
     config.tileZ = 16;
     config.terrain = false;
-    config.terrainSubdivision = 64;
+    config.terrainExtrusionScale = 1.0f;
     config.buildings = true;
     config.roads = false;
 
