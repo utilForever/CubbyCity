@@ -13,6 +13,16 @@
 
 namespace CubbyCity
 {
+inline glm::dvec2 ConvertLonLatToMeters(const glm::dvec2 lonLat)
+{
+    glm::dvec2 meters;
+    meters.x = lonLat.x * HALF_CIRCUMFERENCE * INV_180;
+    meters.y = log(tan(MATH_PI * 0.25 + lonLat.y * MATH_PI * INV_360)) *
+               static_cast<double>(RADIUS_EARTH);
+
+    return meters;
+}
+
 inline glm::dvec2 ConvertPixelToMeters(const glm::dvec2 pixel, const int zoom,
                                        double invTileSize)
 {
