@@ -7,10 +7,8 @@
 #ifndef CUBBYCITY_PROGRAM_HPP
 #define CUBBYCITY_PROGRAM_HPP
 
-#include <CubbyCity/Geometry/Tile.hpp>
+#include <CubbyCity/Geometry/Geometry.hpp>
 #include <CubbyCity/Programs/ProgramConfig.hpp>
-
-#include <string>
 
 namespace CubbyCity
 {
@@ -23,6 +21,7 @@ class Program
 
  private:
     ProgramConfig m_config;
+    Geometry m_geometry;
 };
 }  // namespace CubbyCity
 
