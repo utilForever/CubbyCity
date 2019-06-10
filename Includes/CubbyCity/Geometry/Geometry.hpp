@@ -24,6 +24,8 @@ class Geometry
     void DownloadData(const std::string& apiKey, bool terrain,
                       float terrainExtrusionScale, bool buildings, bool roads);
 
+    void AdjustTerrainEdges();
+
  private:
     std::tuple<int, int> ExtractTileRange(const std::string& range) const;
 

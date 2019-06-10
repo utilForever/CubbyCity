@@ -80,6 +80,52 @@ void Geometry::DownloadData(const std::string& apiKey, bool terrain,
     }
 }
 
+void Geometry::AdjustTerrainEdges()
+{
+    for (auto& tileData0 : m_heightData)
+    {
+        auto& tileHeight0 = tileData0.second;
+
+        for (auto& tileData1 : m_heightData)
+        {
+            if (tileData0.first == tileData1.first)
+            {
+                continue;
+            }
+
+            auto& tileHeight1 = tileData1.second;
+
+            if (tileData0.first.x + 1 == tileData1.first.x &&
+                tileData0.first.y == tileData1.first.y)
+            {
+                for (size_t y = 0; y < tileHeight0->height; ++y)
+                {
+                    const float h0 =
+                        tileHeight0->elevation[tileHeight0->width - 1][y];
+                    const float h1 = tileHeight1->elevation[0][y];
+                    const float h = (h0 + h1) * 0.5f;
+                    tileHeight0->elevation[tileHeight0->width - 1][y] = h;
+                    tileHeight1->elevation[0][y] = h;
+                }
+            }
+
+            if (tileData0.first.y + 1 == tileData1.first.y &&
+                tileData0.first.x == tileData1.first.x)
+            {
+                for (size_t x = 0; x < tileHeight0->width; ++x)
+                {
+                    const float h0 =
+                        tileHeight0->elevation[x][tileHeight0->height - 1];
+                    const float h1 = tileHeight1->elevation[x][0];
+                    const float h = (h0 + h1) * 0.5f;
+                    tileHeight0->elevation[x][tileHeight0->height - 1] = h;
+                    tileHeight1->elevation[x][0] = h;
+                }
+            }
+        }
+    }
+}
+
 std::tuple<int, int> Geometry::ExtractTileRange(const std::string& range) const
 {
     const std::vector<std::string> tilesRange = SplitString(range, '/');
