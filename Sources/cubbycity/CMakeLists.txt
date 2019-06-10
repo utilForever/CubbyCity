@@ -8,6 +8,9 @@ set(root_dir ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Libraries
+	${CMAKE_CURRENT_SOURCE_DIR}/../../Libraries/glm
+	${CMAKE_CURRENT_SOURCE_DIR}/../../Libraries/stb
+	${CMAKE_CURRENT_SOURCE_DIR}/../../Libraries/json
 )
 
 # Sources
@@ -15,7 +18,7 @@ file(GLOB header_dir
     ${root_dir}/Includes)
 
 file(GLOB_RECURSE headers
-    ${header_dir}/*.h)
+    ${header_dir}/*.hpp)
 
 file(GLOB_RECURSE sources
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)

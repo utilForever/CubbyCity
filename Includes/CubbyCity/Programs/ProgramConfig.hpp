@@ -4,18 +4,27 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
-#ifndef CUBBYCITY_DOWNLOADER_HPP
-#define CUBBYCITY_DOWNLOADER_HPP
+#ifndef CUBBYCITY_PROGRAM_CONFIG_HPP
+#define CUBBYCITY_PROGRAM_CONFIG_HPP
 
 #include <string>
 
 namespace CubbyCity
 {
-class Downloader
+struct ProgramConfig
 {
- public:
-    virtual bool DownloadData(std::string& out, const std::string& url) = 0;
+    std::string apiKey;
+
+    std::string tileX;
+    std::string tileY;
+    int tileZ;
+
+    bool terrain;
+    float terrainExtrusionScale;
+
+    bool buildings;
+    bool roads;
 };
 }  // namespace CubbyCity
 
-#endif  // CUBBYCITY_DOWNLOADER_HPP
+#endif  // CUBBYCITY_PROGRAM_CONFIG_HPP

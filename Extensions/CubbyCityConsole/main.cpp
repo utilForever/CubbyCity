@@ -4,29 +4,25 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
-#include <CubbyCity/Platform/WindowsDownloader.hpp>
-
-#include <iostream>
+#include <CubbyCity/Programs/Program.hpp>
+#include <CubbyCity/Programs/ProgramConfig.hpp>
 
 using namespace CubbyCity;
 
-int main(int argc, char* argv[])
+int main()
 {
-    if (argc != 2)
-    {
-        return EXIT_FAILURE;
-    }
+    ProgramConfig config;
+    config.apiKey = "ZhvAFy8gTZSk6sPnAn_KwA";
+    config.tileX = "19294";
+    config.tileY = "24642";
+    config.tileZ = 16;
+    config.terrain = false;
+    config.terrainExtrusionScale = 1.0f;
+    config.buildings = true;
+    config.roads = false;
 
-    WindowsDownloader downloader;
-    std::string out;
-    std::string url =
-        "https://tile.nextzen.org/tilezen/vector/v1/512/all/16/19293/"
-        "24641.json?api_key=" +
-        std::string(argv[1]);
-
-    downloader.DownloadData(out, url);
-
-    std::cout << out << '\n';
+    Program program(config);
+    program.Process();
 
     return 0;
 }

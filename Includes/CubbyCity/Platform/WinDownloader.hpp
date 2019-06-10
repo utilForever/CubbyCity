@@ -4,18 +4,18 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
-#ifndef CUBBYCITY_WINDOWS_DOWNLOADER_H
-#define CUBBYCITY_WINDOWS_DOWNLOADER_H
+#ifndef CUBBYCITY_WIN_DOWNLOADER_HPP
+#define CUBBYCITY_WIN_DOWNLOADER_HPP
 
 #include <CubbyCity/Platform/Downloader.hpp>
 
 namespace CubbyCity
 {
-class WindowsDownloader : public Downloader
+class WinDownloader : public Downloader
 {
  public:
     bool DownloadData(std::string& out, const std::string& url) override;
 };
 }  // namespace CubbyCity
 
-#endif
+#endif  // CUBBYCITY_WIN_DOWNLOADER_HPP

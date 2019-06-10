@@ -6,7 +6,7 @@
 
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 
-#include <CubbyCity/Platform/WindowsDownloader.hpp>
+#include <CubbyCity/Platform/WinDownloader.hpp>
 
 #include <Windows.h>
 #include <winhttp.h>
@@ -19,7 +19,7 @@
 
 namespace CubbyCity
 {
-bool WindowsDownloader::DownloadData(std::string& out, const std::string& url)
+bool WinDownloader::DownloadData(std::string& out, const std::string& url)
 {
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     std::vector<char> stream;
