@@ -20,9 +20,9 @@ void Program::Process()
                             m_config.terrainExtrusionScale, m_config.buildings,
                             m_config.roads);
 
-    // Adjust terrain edges
     if (m_config.terrain)
     {
+        m_geometry.AdjustTerrainEdges();
     }
 }
 }  // namespace CubbyCity
