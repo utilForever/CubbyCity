@@ -14,6 +14,8 @@ namespace CubbyCity
 class Downloader
 {
  public:
+    virtual ~Downloader() = default;
+
     virtual bool DownloadData(std::string& out, const std::string& url) = 0;
 };
 }  // namespace CubbyCity
