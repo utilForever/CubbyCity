@@ -98,7 +98,7 @@ void Geometry::AdjustTerrainEdges()
             if (tileData0.first.x + 1 == tileData1.first.x &&
                 tileData0.first.y == tileData1.first.y)
             {
-                for (size_t y = 0; y < tileHeight0->height; ++y)
+                for (int y = 0; y < tileHeight0->height; ++y)
                 {
                     const float h0 =
                         tileHeight0->elevation[tileHeight0->width - 1][y];
@@ -112,7 +112,7 @@ void Geometry::AdjustTerrainEdges()
             if (tileData0.first.y + 1 == tileData1.first.y &&
                 tileData0.first.x == tileData1.first.x)
             {
-                for (size_t x = 0; x < tileHeight0->width; ++x)
+                for (int x = 0; x < tileHeight0->width; ++x)
                 {
                     const float h0 =
                         tileHeight0->elevation[x][tileHeight0->height - 1];
