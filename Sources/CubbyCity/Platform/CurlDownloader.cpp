@@ -26,7 +26,7 @@ bool CurlDownloader::DownloadData(std::string& out, const std::string& url)
         curlInitialized = true;
 
         // Set up curl to perform fetch
-        curl_easy_setopt(curlHandle, CURLOPT_WRITEFUNCTION, writeData);
+        curl_easy_setopt(curlHandle, CURLOPT_WRITEFUNCTION, WriteData);
         curl_easy_setopt(curlHandle, CURLOPT_HEADER, 0L);
         curl_easy_setopt(curlHandle, CURLOPT_VERBOSE, 0L);
         curl_easy_setopt(curlHandle, CURLOPT_ACCEPT_ENCODING, "gzip");
