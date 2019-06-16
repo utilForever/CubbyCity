@@ -11,5 +11,3 @@ steps:
       solution: 'D:\a\1\s\build\CubbyCity.sln'
       configuration: Release
       platform: x64
-  - script: |
-      D:\a\1\s\build\bin\Release\CubbyCity.exe
