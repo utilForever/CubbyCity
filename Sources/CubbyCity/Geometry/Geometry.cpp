@@ -6,7 +6,7 @@
 
 #include <CubbyCity/Commons/Utils.hpp>
 #include <CubbyCity/Geometry/Geometry.hpp>
-#include "CubbyCity/Platform/DownloadUtils.hpp"
+#include <CubbyCity/Platform/DownloadUtils.hpp>
 
 namespace CubbyCity
 {
