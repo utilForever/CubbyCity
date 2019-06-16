@@ -2,6 +2,25 @@ language: cpp
 
 matrix:
   include:
+    - name: Test Ubuntu 16.04 + gcc-7 + sonarcloud
+      os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+        sonarcloud:
+          organization: "utilforever-github"
+          token:
+            secure: "mVRYk9vvNab9cZUZ5TFBoYisxsWNw3bApYvMVGLxtBADO4qQEKyUFbPGh4Qu7v7WEWDOsDqbSK/6X3NkHR4eObifCJgZaaQfTbIWqrK4K2R9dSkYbBWsXt89t768nUmhRQ9aAdpby0CWv4Ur0lN0j7TpqAkSNSz79nieaCFPnNVjyETt2BCDOEm8QVZViokdlgbTT+cd9SGD6AUAEPxCp7hyWaqDRBbg6bZAvixBrw3J4wJwgMSu/wEi/ViKeOccSBEqh5WrPuCXOej3eaeKM4rViAZwK/IhqBUaDFlUMPdqrTi42XkO1h6Gb8PHfW/1OwyKik4OaEtvfD9cYqs/Bdhf1qjaBKz8w2/Eer2mwAGJ0xcrOQnJdUzijeF2WvuiffutOquqcl9VnRva1CzczMOXe7fvqMPUONQJOoZYmyPyxYeDbPioSXuQ+baL51IUggNGWsK7qu1G25tXyQnkEfQUbPItnbN5lZrYhFDSUvumTTB3A2jp5byHEqKMvp75VEEsMFmKfIIgUorHw2Xxb9l2GaUXVGlq2vwd3OTgeKMehM3T/KfNtD20aEnHZqy6MlCMzKlypQ4jqcHD5kwUDAjytyW8wRyg2OZC50oGwUbt3Q0HFuA20GEnmxpgaf7zJWm9GRO8bldf3cC1H2QM4cxhKQAm/pAFvFIpDbEnvWs="
+      dist: xenial
+      sudo: required
+      compiler: gcc
+      env:
+        - BUILD_TYPE=Debug
+      script:
+        - sh Scripts/travis_build_sonarcloud.sh  
     - name: Test Docker based on Ubuntu 18.04 LTS + gcc
       os: linux
       dist: trusty
