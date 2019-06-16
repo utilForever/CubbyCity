@@ -9,9 +9,14 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 
+#include <CubbyCity/Commons/Macros.hpp>
 #include <CubbyCity/Geometry/GeoJSON.hpp>
 #include <CubbyCity/Geometry/Tile.hpp>
+#if defined(CUBBYCITY_WINDOWS)
 #include <CubbyCity/Platform/WinDownloader.hpp>
+#else
+#include <CubbyCity/Platform/CurlDownloader.hpp>
+#endif
 
 #include <stb/stb_image.h>
 #include <json/json.hpp>
@@ -37,7 +42,11 @@ inline std::string GetTerrainURL(const Tile& tile, const std::string& apiKey)
 inline std::unique_ptr<HeightData> DownloadHeightmapTile(const std::string& url,
                                                          float extrusionScale)
 {
+#if defined(CUBBYCITY_WINDOWS)
     WinDownloader downloader;
+#else
+    CurlDownloader downloader;
+#endif
     std::string out;
 
     if (downloader.DownloadData(out, url))
@@ -94,7 +103,11 @@ inline std::unique_ptr<HeightData> DownloadHeightmapTile(const std::string& url,
 inline std::unique_ptr<TileData> DownloadTile(const std::string& url,
                                               const Tile& tile)
 {
+#if defined(CUBBYCITY_WINDOWS)
     WinDownloader downloader;
+#else
+    CurlDownloader downloader;
+#endif
     std::string out;
 
     if (downloader.DownloadData(out, url))
