@@ -26,7 +26,7 @@ The class is licensed under the [MIT License](http://opensource.org/licenses/MIT
 Copyright (C) 2017-2019 CubbyCity Team
 
   * [Chris Ohk](http://www.github.com/utilForever)
-  * [Paul Kweon](kweonpaul@gmail.com)
+  * [Paul Kweon](mailto:kweonpaul@gmail.com)
   * [Heejun Lee](https://github.com/gmlwns2000)
   * [Changho Sung](https://github.com/oknkc8)
   * [Sungmin So](https://github.com/SungminSo)
