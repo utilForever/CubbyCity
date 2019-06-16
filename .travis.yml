@@ -20,7 +20,7 @@ matrix:
       env:
         - BUILD_TYPE=Debug
       script:
-        - sh Scripts/travis_build_sonarcloud.sh  
+        - sh Scripts/travis_build_sonarcloud.sh
     - name: Test Docker based on Ubuntu 18.04 LTS + gcc
       os: linux
       dist: trusty
