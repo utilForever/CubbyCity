@@ -2,6 +2,7 @@
 
 <img src="https://github.com/utilForever/CubbyCity/blob/master/Medias/Logo.png" width=256 height=256 />
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/cff7ac3808434347aada0e82d932b7ae)](https://app.codacy.com/app/utilForever/CubbyCity?utm_source=github.com&utm_medium=referral&utm_content=utilForever/CubbyCity&utm_campaign=Badge_Grade_Dashboard)
 [![License](https://img.shields.io/badge/Licence-MIT-blue.svg)](https://github.com/utilForever/CubbyCity/blob/master/LICENSE) [![Build Status](https://travis-ci.org/utilForever/CubbyCity.svg?branch=master)](https://travis-ci.org/utilForever/CubbyCity/branches) [![Build status](https://ci.appveyor.com/api/projects/status/github/utilForever/CubbyCity?branch=master&svg=true)](https://ci.appveyor.com/project/utilForever/CubbyCity/branch/master) [![Build Status](https://dev.azure.com/utilforever/CubbyCity/_apis/build/status/utilForever.CubbyCity?branchName=master)](https://dev.azure.com/utilforever/CubbyCity/_build/latest?definitionId=5&branchName=master)
 
 CubbyCity is simple GIS(Geographic Information System) program to analyze the causes of urban engineering problems such as gentrification. The code can be compiled with commonly available compilers such as g++, clang++, or Microsoft Visual Studio. CubbyCity currently supports macOS (10.12.6 or later), Ubuntu (17.04 or later), Windows (Visual Studio 2017 or later), and Windows Subsystem for Linux (WSL). Other untested platforms that support C++17 also should be able to build CubbyCity.
