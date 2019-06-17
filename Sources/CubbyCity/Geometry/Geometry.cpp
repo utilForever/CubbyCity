@@ -168,4 +168,60 @@ std::tuple<int, int> Geometry::ExtractTileRange(const std::string& range) const
 
     return std::make_tuple(start, end);
 }
+
+void Geometry::BuildPlane(std::vector<PolygonVertex>& outVertices,
+                          std::vector<unsigned int>& outIndices, float width,
+                          float height, int nw, int nh, bool flip)
+{
+    std::vector<glm::vec4> vertices;
+    std::vector<int> indices;
+
+    int indexOffset = 0;
+
+    const float ow = width / static_cast<float>(nw);
+    const float oh = height / static_cast<float>(nh);
+    glm::vec3 normal(0.0, 0.0, 1.0);
+
+    if (flip)
+    {
+        normal *= -1.f;
+    }
+
+    for (float w = -width / 2.0; w <= width / 2.0 - ow; w += ow)
+    {
+        for (float h = -height / 2.0; h <= height / 2.0 - oh; h += oh)
+        {
+            const glm::vec3 v0(w, h + oh, 0.0);
+            const glm::vec3 v1(w, h, 0.0);
+            const glm::vec3 v2(w + ow, h, 0.0);
+            const glm::vec3 v3(w + ow, h + oh, 0.0);
+
+            outVertices.push_back({ v0, normal });
+            outVertices.push_back({ v1, normal });
+            outVertices.push_back({ v2, normal });
+            outVertices.push_back({ v3, normal });
+
+            if (!flip)
+            {
+                outIndices.push_back(indexOffset + 0);
+                outIndices.push_back(indexOffset + 1);
+                outIndices.push_back(indexOffset + 2);
+                outIndices.push_back(indexOffset + 0);
+                outIndices.push_back(indexOffset + 2);
+                outIndices.push_back(indexOffset + 3);
+            }
+            else
+            {
+                outIndices.push_back(indexOffset + 0);
+                outIndices.push_back(indexOffset + 2);
+                outIndices.push_back(indexOffset + 1);
+                outIndices.push_back(indexOffset + 0);
+                outIndices.push_back(indexOffset + 3);
+                outIndices.push_back(indexOffset + 2);
+            }
+
+            indexOffset += 4;
+        }
+    }
+}
 }  // namespace CubbyCity

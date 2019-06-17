@@ -33,6 +33,10 @@ class Geometry
  private:
     std::tuple<int, int> ExtractTileRange(const std::string& range) const;
 
+    static void BuildPlane(std::vector<PolygonVertex>& outVertices,
+                           std::vector<unsigned int>& outIndices, float width,
+                           float height, int nw, int nh, bool flip = false);
+
     std::vector<Tile> m_tiles;
     std::vector<std::unique_ptr<PolygonMesh>> meshes;
     std::unordered_map<Tile, std::unique_ptr<HeightData>> m_heightData;
