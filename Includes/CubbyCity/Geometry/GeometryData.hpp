@@ -66,6 +66,19 @@ struct HeightData
     int height;
     std::vector<std::vector<float>> elevation;
 };
+
+struct PolygonVertex
+{
+    glm::vec3 position;
+    glm::vec3 normal;
+};
+
+struct PolygonMesh
+{
+    std::vector<unsigned int> indices;
+    std::vector<PolygonVertex> vertices;
+    glm::vec2 offset;
+};
 }  // namespace CubbyCity
 
 #endif  // CUBBYCITY_GEOMETRY_DATA_HPP
