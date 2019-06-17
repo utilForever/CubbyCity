@@ -134,17 +134,20 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
     // Build meshes for each of the tiles
     for (auto& tile : m_tiles)
     {
-        offset.x = (tile.x - origin.x) * 2;
-        offset.y = -(tile.y - origin.y) * 2;
+        offset.x = static_cast<float>((tile.x - origin.x)) * 2.0f;
+        offset.y = static_cast<float>(-(tile.y - origin.y)) * 2.0f;
 
         const auto& texData = m_heightData[tile];
+
+        (void)offset;
+        (void)texData;
 
         // Build terrain mesh
         if (config.terrain)
         {
             // Extract a plane geometry for terrain mesh
             auto mesh = std::unique_ptr<PolygonMesh>(new PolygonMesh);
-            BuildPlane(mesh->vertices, mesh->indices, 2.0, 2.0,
+            BuildPlane(mesh->vertices, mesh->indices, 2, 2,
                        config.terrainSubdivision, config.terrainSubdivision);
         }
     }
@@ -179,16 +182,16 @@ std::tuple<int, int> Geometry::ExtractTileRange(const std::string& range) const
 }
 
 void Geometry::BuildPlane(std::vector<PolygonVertex>& outVertices,
-                          std::vector<unsigned int>& outIndices, float width,
-                          float height, int nw, int nh, bool flip)
+                          std::vector<unsigned int>& outIndices, int width,
+                          int height, int nw, int nh, bool flip)
 {
     std::vector<glm::vec4> vertices;
     std::vector<int> indices;
 
     int indexOffset = 0;
 
-    const float ow = width / static_cast<float>(nw);
-    const float oh = height / static_cast<float>(nh);
+    const float ow = static_cast<float>(width) / static_cast<float>(nw);
+    const float oh = static_cast<float>(height) / static_cast<float>(nh);
     glm::vec3 normal(0.0, 0.0, 1.0);
 
     if (flip)
@@ -196,14 +199,17 @@ void Geometry::BuildPlane(std::vector<PolygonVertex>& outVertices,
         normal *= -1.f;
     }
 
-    for (float w = -width / 2.0; w <= width / 2.0 - ow; w += ow)
+    for (int w = -nw * width; w <= (nw - 2) * width; w += 2 * width)
     {
-        for (float h = -height / 2.0; h <= height / 2.0 - oh; h += oh)
+        for (int h = -nh * height; h <= (nh - 2) * height; h += 2 * height)
         {
-            const glm::vec3 v0(w, h + oh, 0.0);
-            const glm::vec3 v1(w, h, 0.0);
-            const glm::vec3 v2(w + ow, h, 0.0);
-            const glm::vec3 v3(w + ow, h + oh, 0.0);
+            const float dw = static_cast<float>(w) / static_cast<float>(2 * nw);
+            const float dh = static_cast<float>(h) / static_cast<float>(2 * nh);
+
+            const glm::vec3 v0(dw, dh + oh, 0.0);
+            const glm::vec3 v1(dw, dh, 0.0);
+            const glm::vec3 v2(dw + ow, dh, 0.0);
+            const glm::vec3 v3(dw + ow, dh + oh, 0.0);
 
             outVertices.push_back({ v0, normal });
             outVertices.push_back({ v1, normal });
