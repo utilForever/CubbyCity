@@ -126,6 +126,21 @@ void Geometry::AdjustTerrainEdges()
     }
 }
 
+void Geometry::BuildMeshes(const ProgramConfig& config)
+{
+    glm::vec2 offset;
+    Tile origin = m_tiles[0];
+
+    // Build meshes for each of the tiles
+    for (auto& tile : m_tiles)
+    {
+        offset.x = (tile.x - origin.x) * 2;
+        offset.y = -(tile.y - origin.y) * 2;
+
+        const auto& texData = m_heightData[tile];
+    }
+}
+
 std::tuple<int, int> Geometry::ExtractTileRange(const std::string& range) const
 {
     const std::vector<std::string> tilesRange = SplitString(range, '/');

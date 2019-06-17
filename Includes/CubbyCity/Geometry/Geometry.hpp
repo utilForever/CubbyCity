@@ -9,6 +9,7 @@
 
 #include <CubbyCity/Geometry/GeometryData.hpp>
 #include <CubbyCity/Geometry/Tile.hpp>
+#include <CubbyCity/Programs/ProgramConfig.hpp>
 
 #include <memory>
 #include <unordered_map>
@@ -21,15 +22,19 @@ class Geometry
  public:
     void ParseTiles(const std::string& tileX, const std::string& tileY,
                     int tileZ);
+
     void DownloadData(const std::string& apiKey, bool terrain,
                       float terrainExtrusionScale, bool buildings, bool roads);
 
     void AdjustTerrainEdges();
 
+    void BuildMeshes(const ProgramConfig& config);
+
  private:
     std::tuple<int, int> ExtractTileRange(const std::string& range) const;
 
     std::vector<Tile> m_tiles;
+    std::vector<std::unique_ptr<PolygonMesh>> meshes;
     std::unordered_map<Tile, std::unique_ptr<HeightData>> m_heightData;
     std::unordered_map<Tile, std::unique_ptr<TileData>> m_vectorTileData;
 };
