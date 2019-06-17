@@ -24,5 +24,7 @@ void Program::Process()
     {
         m_geometry.AdjustTerrainEdges();
     }
+
+    m_geometry.BuildMeshes(m_config);
 }
 }  // namespace CubbyCity
