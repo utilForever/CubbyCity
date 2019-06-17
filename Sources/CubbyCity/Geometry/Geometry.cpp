@@ -138,6 +138,15 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
         offset.y = -(tile.y - origin.y) * 2;
 
         const auto& texData = m_heightData[tile];
+
+        // Build terrain mesh
+        if (config.terrain)
+        {
+            // Extract a plane geometry for terrain mesh
+            auto mesh = std::unique_ptr<PolygonMesh>(new PolygonMesh);
+            BuildPlane(mesh->vertices, mesh->indices, 2.0, 2.0,
+                       config.terrainSubdivision, config.terrainSubdivision);
+        }
     }
 }
 
