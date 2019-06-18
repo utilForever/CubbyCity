@@ -16,11 +16,13 @@ int main()
     config.tileX = "19294";
     config.tileY = "24642";
     config.tileZ = 16;
-    config.terrain = false;
     config.terrainSubdivision = 64;
     config.terrainExtrusionScale = 1.0f;
+    config.pedestalHeight = 0.0f;
+    config.terrain = false;
     config.buildings = true;
     config.roads = false;
+    config.pedestal = false;
     config.normals = false;
 
     Program program(config);

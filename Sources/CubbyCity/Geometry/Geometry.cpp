@@ -170,6 +170,32 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
             mesh->offset = offset;
             meshes.push_back(std::move(mesh));
         }
+
+        // Build pedestal
+        if (config.pedestal)
+        {
+            auto ground = std::unique_ptr<PolygonMesh>(new PolygonMesh);
+            auto wall = std::unique_ptr<PolygonMesh>(new PolygonMesh);
+
+            BuildPlane(ground->vertices, ground->indices, 2, 2,
+                       config.terrainSubdivision, config.terrainSubdivision,
+                       true);
+
+            for (auto& vertex : ground->vertices)
+            {
+                vertex.position.z =
+                    config.pedestalHeight * static_cast<float>(tile.invScale);
+            }
+
+            BuildPedestalPlanes(tile, wall->vertices, wall->indices, texData,
+                                config.terrainSubdivision,
+                                config.pedestalHeight);
+
+            ground->offset = offset;
+            meshes.push_back(std::move(ground));
+            wall->offset = offset;
+            meshes.push_back(std::move(wall));
+        }
     }
 }
 
