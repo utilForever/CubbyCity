@@ -140,7 +140,6 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
         const auto& texData = m_heightData[tile];
 
         (void)offset;
-        (void)texData;
 
         // Build terrain mesh
         if (config.terrain)
@@ -149,6 +148,17 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
             auto mesh = std::unique_ptr<PolygonMesh>(new PolygonMesh);
             BuildPlane(mesh->vertices, mesh->indices, 2, 2,
                        config.terrainSubdivision, config.terrainSubdivision);
+
+            // Build terrain mesh extrusion, with bilinear height sampling
+            for (auto& vertex : mesh->vertices)
+            {
+                const glm::vec2 tilePosition =
+                    glm::vec2(vertex.position.x, vertex.position.y);
+                const float extrusion = SampleElevation(tilePosition, texData);
+
+                // Scale the height within the tile scale
+                vertex.position.z = extrusion * tile.invScale;
+            }
         }
     }
 }
