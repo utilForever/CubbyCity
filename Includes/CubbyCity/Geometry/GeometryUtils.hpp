@@ -41,6 +41,11 @@ inline glm::dvec4 GetTileBounds(int x, int y, int z, double tileSize)
         ConvertPixelToMeters({ (x + 1) * tileSize, (y + 1) * tileSize }, z,
                              1.0 / tileSize));
 }
+
+inline bool IsWithinTileRange(const glm::vec2& pos)
+{
+    return pos.x >= -1.0 && pos.x <= 1.0 && pos.y >= -1.0 && pos.y <= 1.0;
+}
 }  // namespace CubbyCity
 
 #endif  // CUBBYCITY_GEOMETRY_UTILS_HPP
