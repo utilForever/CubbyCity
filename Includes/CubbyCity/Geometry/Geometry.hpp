@@ -37,8 +37,14 @@ class Geometry
                            std::vector<unsigned int>& outIndices, int width,
                            int height, int nw, int nh, bool flip = false);
 
-    float SampleElevation(glm::vec2 position,
-                          const std::unique_ptr<HeightData>& texData) const;
+    static void BuildPedestalPlanes(
+        const Tile& tile, std::vector<PolygonVertex>& outVertices,
+        std::vector<unsigned int>& outIndices,
+        const std::unique_ptr<HeightData>& elevation, int subDiv,
+        float pedestalHeight);
+
+    static float SampleElevation(glm::vec2 position,
+                                 const std::unique_ptr<HeightData>& texData);
 
     std::vector<Tile> m_tiles;
     std::vector<std::unique_ptr<PolygonMesh>> meshes;

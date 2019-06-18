@@ -260,8 +260,97 @@ void Geometry::BuildPlane(std::vector<PolygonVertex>& outVertices,
     }
 }
 
-float Geometry::SampleElevation(
-    glm::vec2 position, const std::unique_ptr<HeightData>& texData) const
+void Geometry::BuildPedestalPlanes(const Tile& tile,
+                                   std::vector<PolygonVertex>& outVertices,
+                                   std::vector<unsigned int>& outIndices,
+                                   const std::unique_ptr<HeightData>& elevation,
+                                   int subDiv, float pedestalHeight)
+{
+    float offset = 1.0f / static_cast<float>(subDiv);
+    unsigned int vertexDataOffset =
+        static_cast<unsigned int>(outVertices.size());
+
+    for (size_t i = 0; i < tile.borders.size(); ++i)
+    {
+        if (!tile.borders[i])
+        {
+            continue;
+        }
+
+        for (int x = -subDiv; x < subDiv; x += 1)
+        {
+            float dx = static_cast<float>(x) / static_cast<float>(subDiv);
+
+            static const glm::vec3 upVector(0.0, 0.0, 1.0);
+            glm::vec3 v0, v1;
+
+            if (i == Border::Right)
+            {
+                v0 = glm::vec3(1.0, dx + offset, 0.0);
+                v1 = glm::vec3(1.0, dx, 0.0);
+            }
+
+            if (i == Border::Left)
+            {
+                v0 = glm::vec3(-1.0, dx + offset, 0.0);
+                v1 = glm::vec3(-1.0, dx, 0.0);
+            }
+
+            if (i == Border::Top)
+            {
+                v0 = glm::vec3(dx + offset, 1.0, 0.0);
+                v1 = glm::vec3(dx, 1.0, 0.0);
+            }
+
+            if (i == Border::Bottom)
+            {
+                v0 = glm::vec3(dx + offset, -1.0, 0.0);
+                v1 = glm::vec3(dx, -1.0, 0.0);
+            }
+
+            glm::vec3 normalVector;
+
+            normalVector = glm::cross(upVector, v0 - v1);
+            normalVector = glm::normalize(normalVector);
+
+            float h0 = SampleElevation(glm::vec2(v0.x, v0.y), elevation);
+            float h1 = SampleElevation(glm::vec2(v1.x, v1.y), elevation);
+
+            v0.z = h0 * static_cast<float>(tile.invScale);
+            outVertices.push_back({ v0, normalVector });
+            v1.z = h1 * static_cast<float>(tile.invScale);
+            outVertices.push_back({ v1, normalVector });
+            v0.z = pedestalHeight * static_cast<float>(tile.invScale);
+            outVertices.push_back({ v0, normalVector });
+            v1.z = pedestalHeight * static_cast<float>(tile.invScale);
+            outVertices.push_back({ v1, normalVector });
+
+            if (i == Border::Right || i == Border::Bottom)
+            {
+                outIndices.push_back(vertexDataOffset + 0);
+                outIndices.push_back(vertexDataOffset + 1);
+                outIndices.push_back(vertexDataOffset + 2);
+                outIndices.push_back(vertexDataOffset + 1);
+                outIndices.push_back(vertexDataOffset + 3);
+                outIndices.push_back(vertexDataOffset + 2);
+            }
+            else
+            {
+                outIndices.push_back(vertexDataOffset + 0);
+                outIndices.push_back(vertexDataOffset + 2);
+                outIndices.push_back(vertexDataOffset + 1);
+                outIndices.push_back(vertexDataOffset + 1);
+                outIndices.push_back(vertexDataOffset + 2);
+                outIndices.push_back(vertexDataOffset + 3);
+            }
+
+            vertexDataOffset += 4;
+        }
+    }
+}
+
+float Geometry::SampleElevation(glm::vec2 position,
+                                const std::unique_ptr<HeightData>& texData)
 {
     if (!texData)
     {
