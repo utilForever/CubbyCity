@@ -157,7 +157,8 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
                 const float extrusion = SampleElevation(tilePosition, texData);
 
                 // Scale the height within the tile scale
-                vertex.position.z = extrusion * tile.invScale;
+                vertex.position.z =
+                    extrusion * static_cast<float>(tile.invScale);
             }
         }
     }
@@ -274,8 +275,8 @@ float Geometry::SampleElevation(
     const float alpha = u - floor(u);
     const float beta = v - floor(v);
 
-    int ii0 = floor(u);
-    int jj0 = floor(v);
+    int ii0 = static_cast<int>(floor(u));
+    int jj0 = static_cast<int>(floor(v));
     int ii1 = ii0 + 1;
     int jj1 = jj0 + 1;
 
