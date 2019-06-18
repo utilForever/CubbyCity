@@ -21,6 +21,7 @@ int main()
     config.terrainExtrusionScale = 1.0f;
     config.buildings = true;
     config.roads = false;
+    config.normals = false;
 
     Program program(config);
     program.Process();

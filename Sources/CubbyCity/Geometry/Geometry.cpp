@@ -160,6 +160,15 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
                 vertex.position.z =
                     extrusion * static_cast<float>(tile.invScale);
             }
+
+            // Compute faces normals
+            if (config.normals)
+            {
+                ComputeNormals(*mesh);
+            }
+
+            mesh->offset = offset;
+            meshes.push_back(std::move(mesh));
         }
     }
 }

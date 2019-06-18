@@ -25,6 +25,7 @@ struct ProgramConfig
 
     bool buildings;
     bool roads;
+    bool normals;
 };
 }  // namespace CubbyCity
 
