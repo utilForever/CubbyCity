@@ -37,6 +37,9 @@ class Geometry
                            std::vector<unsigned int>& outIndices, int width,
                            int height, int nw, int nh, bool flip = false);
 
+    float SampleElevation(glm::vec2 position,
+                          const std::unique_ptr<HeightData>& texData) const;
+
     std::vector<Tile> m_tiles;
     std::vector<std::unique_ptr<PolygonMesh>> meshes;
     std::unordered_map<Tile, std::unique_ptr<HeightData>> m_heightData;

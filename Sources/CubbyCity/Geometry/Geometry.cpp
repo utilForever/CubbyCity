@@ -239,4 +239,53 @@ void Geometry::BuildPlane(std::vector<PolygonVertex>& outVertices,
         }
     }
 }
+
+float Geometry::SampleElevation(
+    glm::vec2 position, const std::unique_ptr<HeightData>& texData) const
+{
+    if (!texData)
+    {
+        return 0.0;
+    }
+
+    if (!IsWithinTileRange(position))
+    {
+        position = glm::clamp(position, glm::vec2(-1.0), glm::vec2(1.0));
+    }
+
+    // Normalize vertex coordinates into the texture coordinates range
+    const float u =
+        (position.x * 0.5f + 0.5f) * static_cast<float>(texData->width);
+    float v = (position.y * 0.5f + 0.5f) * static_cast<float>(texData->height);
+
+    // Flip v coordinate according to tile coordinates
+    v = static_cast<float>(texData->height) - v;
+
+    const float alpha = u - floor(u);
+    const float beta = v - floor(v);
+
+    int ii0 = floor(u);
+    int jj0 = floor(v);
+    int ii1 = ii0 + 1;
+    int jj1 = jj0 + 1;
+
+    // Clamp on borders
+    ii0 = std::min(ii0, texData->width - 1);
+    jj0 = std::min(jj0, texData->height - 1);
+    ii1 = std::min(ii1, texData->width - 1);
+    jj1 = std::min(jj1, texData->height - 1);
+
+    // Sample four corners of the current texel
+    const float s0 = texData->elevation[ii0][jj0];
+    const float s1 = texData->elevation[ii0][jj1];
+    const float s2 = texData->elevation[ii1][jj0];
+    const float s3 = texData->elevation[ii1][jj1];
+
+    // Sample the bilinear height from the elevation texture
+    const float bilinearHeight = (1 - beta) * (1 - alpha) * s0 +
+                                 (1 - beta) * alpha * s1 +
+                                 beta * (1 - alpha) * s2 + alpha * beta * s3;
+
+    return bilinearHeight;
+}
 }  // namespace CubbyCity
