@@ -27,10 +27,10 @@ struct Tile
 {
     Tile(int _x, int _y, int _z) : x(_x), y(_y), z(_z)
     {
-        glm::dvec4 bounds = GetTileBounds(x, y, z, 256.0);
+        const glm::dvec4 bounds = GetTileBounds(x, y, z, 256.0);
         tileOrigin = glm::dvec2(0.5 * (bounds.x + bounds.z),
                                 -0.5 * (bounds.y + bounds.w));
-        double scale = 0.5 * glm::abs(bounds.x - bounds.z);
+        const double scale = 0.5 * glm::abs(bounds.x - bounds.z);
         invScale = 1.0 / scale;
         borders = 0;
     }
@@ -47,7 +47,7 @@ struct Tile
     std::bitset<4> borders;
 
     double invScale = 0.0;
-    glm::dvec2 tileOrigin;
+    glm::dvec2 tileOrigin = { 0.0, 0.0 };
 };
 }  // namespace CubbyCity
 
