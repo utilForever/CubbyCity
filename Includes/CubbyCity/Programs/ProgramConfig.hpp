@@ -21,6 +21,10 @@ struct ProgramConfig
 
     int terrainSubdivision;
     double terrainExtrusionScale;
+    double buildingsHeight;
+    double buildingsExtrusionScale;
+    double roadsHeight;
+    double roadsExtrusionWidth;
     double pedestalHeight;
 
     bool terrain;
