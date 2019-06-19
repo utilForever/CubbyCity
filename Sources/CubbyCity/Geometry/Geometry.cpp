@@ -129,7 +129,7 @@ void Geometry::AdjustTerrainEdges()
 void Geometry::BuildMeshes(const ProgramConfig& config)
 {
     glm::vec2 offset;
-    Tile origin = m_tiles[0];
+    const Tile origin = m_tiles[0];
 
     // Build meshes for each of the tiles
     for (auto& tile : m_tiles)
@@ -138,8 +138,6 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
         offset.y = static_cast<float>(-(tile.y - origin.y)) * 2.0f;
 
         const auto& texData = m_heightData[tile];
-
-        (void)offset;
 
         // Build terrain mesh
         if (config.terrain)
@@ -169,32 +167,32 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
 
             mesh->offset = offset;
             meshes.push_back(std::move(mesh));
-        }
 
-        // Build pedestal
-        if (config.pedestal)
-        {
-            auto ground = std::unique_ptr<PolygonMesh>(new PolygonMesh);
-            auto wall = std::unique_ptr<PolygonMesh>(new PolygonMesh);
-
-            BuildPlane(ground->vertices, ground->indices, 2, 2,
-                       config.terrainSubdivision, config.terrainSubdivision,
-                       true);
-
-            for (auto& vertex : ground->vertices)
+            // Build pedestal
+            if (config.pedestal)
             {
-                vertex.position.z =
-                    config.pedestalHeight * static_cast<float>(tile.invScale);
+                auto ground = std::unique_ptr<PolygonMesh>(new PolygonMesh);
+                auto wall = std::unique_ptr<PolygonMesh>(new PolygonMesh);
+
+                BuildPlane(ground->vertices, ground->indices, 2, 2,
+                           config.terrainSubdivision, config.terrainSubdivision,
+                           true);
+
+                for (auto& vertex : ground->vertices)
+                {
+                    vertex.position.z = config.pedestalHeight *
+                                        static_cast<float>(tile.invScale);
+                }
+
+                BuildPedestalPlanes(tile, wall->vertices, wall->indices,
+                                    texData, config.terrainSubdivision,
+                                    config.pedestalHeight);
+
+                ground->offset = offset;
+                meshes.push_back(std::move(ground));
+                wall->offset = offset;
+                meshes.push_back(std::move(wall));
             }
-
-            BuildPedestalPlanes(tile, wall->vertices, wall->indices, texData,
-                                config.terrainSubdivision,
-                                config.pedestalHeight);
-
-            ground->offset = offset;
-            meshes.push_back(std::move(ground));
-            wall->offset = offset;
-            meshes.push_back(std::move(wall));
         }
     }
 }
