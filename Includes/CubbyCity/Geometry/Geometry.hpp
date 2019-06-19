@@ -43,6 +43,12 @@ class Geometry
         const std::unique_ptr<HeightData>& elevation, int subDiv,
         double pedestalHeight);
 
+    static double BuildPolygonExtrusion(
+        const Polygon& polygon, double minHeight, double height,
+        std::vector<PolygonVertex>& outVertices,
+        std::vector<unsigned int>& outIndices,
+        const std::unique_ptr<HeightData>& elevation, double inverseTileScale);
+
     static double SampleElevation(glm::dvec2 position,
                                   const std::unique_ptr<HeightData>& texData);
 

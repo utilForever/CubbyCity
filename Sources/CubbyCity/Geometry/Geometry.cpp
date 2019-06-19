@@ -370,6 +370,79 @@ void Geometry::BuildPedestalPlanes(const Tile& tile,
     }
 }
 
+double Geometry::BuildPolygonExtrusion(
+    const Polygon& polygon, double minHeight, double height,
+    std::vector<PolygonVertex>& outVertices,
+    std::vector<unsigned int>& outIndices,
+    const std::unique_ptr<HeightData>& elevation, double inverseTileScale)
+{
+    auto vertexDataOffset = static_cast<unsigned int>(outVertices.size());
+    const glm::dvec3 upVector(0.0, 0.0, 1.0);
+    double minZ = 0.0;
+    double cz = 0.0;
+
+    // Compute min and max height of the polygon
+    if (elevation)
+    {
+        // The polygon centroid height
+        cz = SampleElevation(GetCentroid(polygon), elevation);
+        minZ = std::numeric_limits<float>::max();
+
+        for (auto& line : polygon)
+        {
+            for (const auto& point : line)
+            {
+                double pz =
+                    SampleElevation(glm::dvec2(point.x, point.y), elevation);
+
+                minZ = std::min(minZ, pz);
+            }
+        }
+    }
+
+    for (auto& line : polygon)
+    {
+        const size_t lineSize = line.size();
+
+        outVertices.reserve(outVertices.size() + lineSize * 4);
+        outIndices.reserve(outIndices.size() + lineSize * 6);
+
+        for (size_t i = 0; i < lineSize - 1; i++)
+        {
+            glm::dvec3 a(line[i]);
+            glm::dvec3 b(line[i + 1]);
+
+            if (a == b)
+            {
+                continue;
+            }
+
+            glm::dvec3 normalVector = glm::cross(upVector, b - a);
+            normalVector = glm::normalize(normalVector);
+
+            a.z = height + cz * inverseTileScale;
+            outVertices.push_back({ a, normalVector });
+            b.z = height + cz * inverseTileScale;
+            outVertices.push_back({ b, normalVector });
+            a.z = minHeight + minZ * inverseTileScale;
+            outVertices.push_back({ a, normalVector });
+            b.z = minHeight + minZ * inverseTileScale;
+            outVertices.push_back({ b, normalVector });
+
+            outIndices.push_back(vertexDataOffset + 0);
+            outIndices.push_back(vertexDataOffset + 1);
+            outIndices.push_back(vertexDataOffset + 2);
+            outIndices.push_back(vertexDataOffset + 1);
+            outIndices.push_back(vertexDataOffset + 3);
+            outIndices.push_back(vertexDataOffset + 2);
+
+            vertexDataOffset += 4;
+        }
+    }
+
+    return cz;
+}
+
 double Geometry::SampleElevation(glm::dvec2 position,
                                  const std::unique_ptr<HeightData>& texData)
 {
