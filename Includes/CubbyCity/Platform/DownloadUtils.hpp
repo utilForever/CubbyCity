@@ -40,7 +40,7 @@ inline std::string GetTerrainURL(const Tile& tile, const std::string& apiKey)
 }
 
 inline std::unique_ptr<HeightData> DownloadHeightmapTile(const std::string& url,
-                                                         float extrusionScale)
+                                                         double extrusionScale)
 {
 #if defined(CUBBYCITY_WINDOWS)
     WinDownloader downloader;
@@ -79,12 +79,12 @@ inline std::unique_ptr<HeightData> DownloadHeightmapTile(const std::string& url,
         unsigned char* pixel = pixels;
         for (int i = 0; i < width * height; ++i, pixel += 4)
         {
-            const float red = *(pixel + 0);
-            const float green = *(pixel + 1);
-            const float blue = *(pixel + 2);
+            const double red = *(pixel + 0);
+            const double green = *(pixel + 1);
+            const double blue = *(pixel + 2);
 
             // Decode the elevation packed data from color component
-            const float elevation = (red * 256 + green + blue / 256) - 32768;
+            const double elevation = (red * 256 + green + blue / 256) - 32768;
 
             const int y = i / height;
             const int x = i % width;

@@ -24,7 +24,7 @@ class Geometry
                     int tileZ);
 
     void DownloadData(const std::string& apiKey, bool terrain,
-                      float terrainExtrusionScale, bool buildings, bool roads);
+                      double terrainExtrusionScale, bool buildings, bool roads);
 
     void AdjustTerrainEdges();
 
@@ -41,10 +41,10 @@ class Geometry
         const Tile& tile, std::vector<PolygonVertex>& outVertices,
         std::vector<unsigned int>& outIndices,
         const std::unique_ptr<HeightData>& elevation, int subDiv,
-        float pedestalHeight);
+        double pedestalHeight);
 
-    static float SampleElevation(glm::vec2 position,
-                                 const std::unique_ptr<HeightData>& texData);
+    static double SampleElevation(glm::dvec2 position,
+                                  const std::unique_ptr<HeightData>& texData);
 
     std::vector<Tile> m_tiles;
     std::vector<std::unique_ptr<PolygonMesh>> meshes;

@@ -45,7 +45,7 @@ void Geometry::ParseTiles(const std::string& tileX, const std::string& tileY,
 }
 
 void Geometry::DownloadData(const std::string& apiKey, bool terrain,
-                            float terrainExtrusionScale, bool buildings,
+                            double terrainExtrusionScale, bool buildings,
                             bool roads)
 {
     for (auto& tile : m_tiles)
@@ -100,10 +100,10 @@ void Geometry::AdjustTerrainEdges()
             {
                 for (int y = 0; y < tileHeight0->height; ++y)
                 {
-                    const float h0 =
+                    const double h0 =
                         tileHeight0->elevation[tileHeight0->width - 1][y];
-                    const float h1 = tileHeight1->elevation[0][y];
-                    const float h = (h0 + h1) * 0.5f;
+                    const double h1 = tileHeight1->elevation[0][y];
+                    const double h = (h0 + h1) * 0.5;
                     tileHeight0->elevation[tileHeight0->width - 1][y] = h;
                     tileHeight1->elevation[0][y] = h;
                 }
@@ -114,10 +114,10 @@ void Geometry::AdjustTerrainEdges()
             {
                 for (int x = 0; x < tileHeight0->width; ++x)
                 {
-                    const float h0 =
+                    const double h0 =
                         tileHeight0->elevation[x][tileHeight0->height - 1];
-                    const float h1 = tileHeight1->elevation[x][0];
-                    const float h = (h0 + h1) * 0.5f;
+                    const double h1 = tileHeight1->elevation[x][0];
+                    const double h = (h0 + h1) * 0.5;
                     tileHeight0->elevation[x][tileHeight0->height - 1] = h;
                     tileHeight1->elevation[x][0] = h;
                 }
@@ -128,14 +128,14 @@ void Geometry::AdjustTerrainEdges()
 
 void Geometry::BuildMeshes(const ProgramConfig& config)
 {
-    glm::vec2 offset;
+    glm::dvec2 offset;
     const Tile origin = m_tiles[0];
 
     // Build meshes for each of the tiles
     for (auto& tile : m_tiles)
     {
-        offset.x = static_cast<float>((tile.x - origin.x)) * 2.0f;
-        offset.y = static_cast<float>(-(tile.y - origin.y)) * 2.0f;
+        offset.x = (tile.x - origin.x) * 2.0;
+        offset.y = -(tile.y - origin.y) * 2.0;
 
         const auto& texData = m_heightData[tile];
 
@@ -150,13 +150,12 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
             // Build terrain mesh extrusion, with bilinear height sampling
             for (auto& vertex : mesh->vertices)
             {
-                const glm::vec2 tilePosition =
-                    glm::vec2(vertex.position.x, vertex.position.y);
-                const float extrusion = SampleElevation(tilePosition, texData);
+                const glm::dvec2 tilePosition =
+                    glm::dvec2(vertex.position.x, vertex.position.y);
+                const double extrusion = SampleElevation(tilePosition, texData);
 
                 // Scale the height within the tile scale
-                vertex.position.z =
-                    extrusion * static_cast<float>(tile.invScale);
+                vertex.position.z = extrusion * tile.invScale;
             }
 
             // Compute faces normals
@@ -180,8 +179,7 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
 
                 for (auto& vertex : ground->vertices)
                 {
-                    vertex.position.z = config.pedestalHeight *
-                                        static_cast<float>(tile.invScale);
+                    vertex.position.z = config.pedestalHeight * tile.invScale;
                 }
 
                 BuildPedestalPlanes(tile, wall->vertices, wall->indices,
@@ -229,14 +227,14 @@ void Geometry::BuildPlane(std::vector<PolygonVertex>& outVertices,
                           std::vector<unsigned int>& outIndices, int width,
                           int height, int nw, int nh, bool flip)
 {
-    std::vector<glm::vec4> vertices;
+    std::vector<glm::dvec4> vertices;
     std::vector<int> indices;
 
     int indexOffset = 0;
 
-    const float ow = static_cast<float>(width) / static_cast<float>(nw);
-    const float oh = static_cast<float>(height) / static_cast<float>(nh);
-    glm::vec3 normal(0.0, 0.0, 1.0);
+    const double ow = static_cast<double>(width) / nw;
+    const double oh = static_cast<double>(height) / nh;
+    glm::dvec3 normal(0.0, 0.0, 1.0);
 
     if (flip)
     {
@@ -247,13 +245,13 @@ void Geometry::BuildPlane(std::vector<PolygonVertex>& outVertices,
     {
         for (int h = -nh * height; h <= (nh - 2) * height; h += 2 * height)
         {
-            const float dw = static_cast<float>(w) / static_cast<float>(2 * nw);
-            const float dh = static_cast<float>(h) / static_cast<float>(2 * nh);
+            const double dw = static_cast<double>(w) / (2 * nw);
+            const double dh = static_cast<double>(h) / (2 * nh);
 
-            const glm::vec3 v0(dw, dh + oh, 0.0);
-            const glm::vec3 v1(dw, dh, 0.0);
-            const glm::vec3 v2(dw + ow, dh, 0.0);
-            const glm::vec3 v3(dw + ow, dh + oh, 0.0);
+            const glm::dvec3 v0(dw, dh + oh, 0.0);
+            const glm::dvec3 v1(dw, dh, 0.0);
+            const glm::dvec3 v2(dw + ow, dh, 0.0);
+            const glm::dvec3 v3(dw + ow, dh + oh, 0.0);
 
             outVertices.push_back({ v0, normal });
             outVertices.push_back({ v1, normal });
@@ -288,11 +286,10 @@ void Geometry::BuildPedestalPlanes(const Tile& tile,
                                    std::vector<PolygonVertex>& outVertices,
                                    std::vector<unsigned int>& outIndices,
                                    const std::unique_ptr<HeightData>& elevation,
-                                   int subDiv, float pedestalHeight)
+                                   int subDiv, double pedestalHeight)
 {
-    float offset = 1.0f / static_cast<float>(subDiv);
-    unsigned int vertexDataOffset =
-        static_cast<unsigned int>(outVertices.size());
+    double offset = 1.0 / subDiv;
+    auto vertexDataOffset = static_cast<unsigned int>(outVertices.size());
 
     for (size_t i = 0; i < tile.borders.size(); ++i)
     {
@@ -303,50 +300,50 @@ void Geometry::BuildPedestalPlanes(const Tile& tile,
 
         for (int x = -subDiv; x < subDiv; x += 1)
         {
-            float dx = static_cast<float>(x) / static_cast<float>(subDiv);
+            double dx = static_cast<double>(x) / subDiv;
 
-            static const glm::vec3 upVector(0.0, 0.0, 1.0);
-            glm::vec3 v0, v1;
+            static const glm::dvec3 upVector(0.0, 0.0, 1.0);
+            glm::dvec3 v0, v1;
 
             if (i == Border::Right)
             {
-                v0 = glm::vec3(1.0, dx + offset, 0.0);
-                v1 = glm::vec3(1.0, dx, 0.0);
+                v0 = glm::dvec3(1.0, dx + offset, 0.0);
+                v1 = glm::dvec3(1.0, dx, 0.0);
             }
 
             if (i == Border::Left)
             {
-                v0 = glm::vec3(-1.0, dx + offset, 0.0);
-                v1 = glm::vec3(-1.0, dx, 0.0);
+                v0 = glm::dvec3(-1.0, dx + offset, 0.0);
+                v1 = glm::dvec3(-1.0, dx, 0.0);
             }
 
             if (i == Border::Top)
             {
-                v0 = glm::vec3(dx + offset, 1.0, 0.0);
-                v1 = glm::vec3(dx, 1.0, 0.0);
+                v0 = glm::dvec3(dx + offset, 1.0, 0.0);
+                v1 = glm::dvec3(dx, 1.0, 0.0);
             }
 
             if (i == Border::Bottom)
             {
-                v0 = glm::vec3(dx + offset, -1.0, 0.0);
-                v1 = glm::vec3(dx, -1.0, 0.0);
+                v0 = glm::dvec3(dx + offset, -1.0, 0.0);
+                v1 = glm::dvec3(dx, -1.0, 0.0);
             }
 
-            glm::vec3 normalVector;
+            glm::dvec3 normalVector;
 
             normalVector = glm::cross(upVector, v0 - v1);
             normalVector = glm::normalize(normalVector);
 
-            float h0 = SampleElevation(glm::vec2(v0.x, v0.y), elevation);
-            float h1 = SampleElevation(glm::vec2(v1.x, v1.y), elevation);
+            double h0 = SampleElevation(glm::dvec2(v0.x, v0.y), elevation);
+            double h1 = SampleElevation(glm::dvec2(v1.x, v1.y), elevation);
 
-            v0.z = h0 * static_cast<float>(tile.invScale);
+            v0.z = h0 * tile.invScale;
             outVertices.push_back({ v0, normalVector });
-            v1.z = h1 * static_cast<float>(tile.invScale);
+            v1.z = h1 * tile.invScale;
             outVertices.push_back({ v1, normalVector });
-            v0.z = pedestalHeight * static_cast<float>(tile.invScale);
+            v0.z = pedestalHeight * tile.invScale;
             outVertices.push_back({ v0, normalVector });
-            v1.z = pedestalHeight * static_cast<float>(tile.invScale);
+            v1.z = pedestalHeight * tile.invScale;
             outVertices.push_back({ v1, normalVector });
 
             if (i == Border::Right || i == Border::Bottom)
@@ -373,8 +370,8 @@ void Geometry::BuildPedestalPlanes(const Tile& tile,
     }
 }
 
-float Geometry::SampleElevation(glm::vec2 position,
-                                const std::unique_ptr<HeightData>& texData)
+double Geometry::SampleElevation(glm::dvec2 position,
+                                 const std::unique_ptr<HeightData>& texData)
 {
     if (!texData)
     {
@@ -383,19 +380,18 @@ float Geometry::SampleElevation(glm::vec2 position,
 
     if (!IsWithinTileRange(position))
     {
-        position = glm::clamp(position, glm::vec2(-1.0), glm::vec2(1.0));
+        position = glm::clamp(position, glm::dvec2(-1.0), glm::dvec2(1.0));
     }
 
     // Normalize vertex coordinates into the texture coordinates range
-    const float u =
-        (position.x * 0.5f + 0.5f) * static_cast<float>(texData->width);
-    float v = (position.y * 0.5f + 0.5f) * static_cast<float>(texData->height);
+    const double u = (position.x * 0.5 + 0.5) * texData->width;
+    double v = (position.y * 0.5 + 0.5) * texData->height;
 
     // Flip v coordinate according to tile coordinates
-    v = static_cast<float>(texData->height) - v;
+    v = static_cast<double>(texData->height) - v;
 
-    const float alpha = u - floor(u);
-    const float beta = v - floor(v);
+    const double alpha = u - floor(u);
+    const double beta = v - floor(v);
 
     int ii0 = static_cast<int>(floor(u));
     int jj0 = static_cast<int>(floor(v));
@@ -409,15 +405,15 @@ float Geometry::SampleElevation(glm::vec2 position,
     jj1 = std::min(jj1, texData->height - 1);
 
     // Sample four corners of the current texel
-    const float s0 = texData->elevation[ii0][jj0];
-    const float s1 = texData->elevation[ii0][jj1];
-    const float s2 = texData->elevation[ii1][jj0];
-    const float s3 = texData->elevation[ii1][jj1];
+    const double s0 = texData->elevation[ii0][jj0];
+    const double s1 = texData->elevation[ii0][jj1];
+    const double s2 = texData->elevation[ii1][jj0];
+    const double s3 = texData->elevation[ii1][jj1];
 
     // Sample the bilinear height from the elevation texture
-    const float bilinearHeight = (1 - beta) * (1 - alpha) * s0 +
-                                 (1 - beta) * alpha * s1 +
-                                 beta * (1 - alpha) * s2 + alpha * beta * s3;
+    const double bilinearHeight = (1 - beta) * (1 - alpha) * s0 +
+                                  (1 - beta) * alpha * s1 +
+                                  beta * (1 - alpha) * s2 + alpha * beta * s3;
 
     return bilinearHeight;
 }

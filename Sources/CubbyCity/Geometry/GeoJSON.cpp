@@ -11,7 +11,7 @@ namespace CubbyCity
 bool GeoJSON::ExtractPoint(const nlohmann::json::value_type& in, Point& out,
                            const Tile& tile, Point* last)
 {
-    glm::dvec2 pos = ConvertLonLatToMeters(
+    const glm::dvec2 pos = ConvertLonLatToMeters(
         glm::dvec2(in[0].get<double>(), in[1].get<double>()));
     out.x = (pos.x - tile.tileOrigin.x) * tile.invScale;
     out.y = (pos.y - tile.tileOrigin.y) * tile.invScale;
