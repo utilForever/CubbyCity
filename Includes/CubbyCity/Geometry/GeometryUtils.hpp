@@ -71,6 +71,30 @@ inline void ComputeNormals(PolygonMesh& mesh)
         v.normal = glm::normalize(v.normal);
     }
 }
+
+inline glm::vec2 GetCentroid(const std::vector<std::vector<glm::vec3>>& polygon)
+{
+    glm::vec2 centroid;
+    int n = 0;
+
+    for (auto& line : polygon)
+    {
+        for (auto& point : line)
+        {
+            centroid.x += point.x;
+            centroid.y += point.y;
+            n++;
+        }
+    }
+
+    if (n == 0)
+    {
+        return centroid;
+    }
+
+    centroid /= n;
+    return centroid;
+}
 }  // namespace CubbyCity
 
 #endif  // CUBBYCITY_GEOMETRY_UTILS_HPP
