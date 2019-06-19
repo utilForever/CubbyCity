@@ -72,9 +72,9 @@ inline void ComputeNormals(PolygonMesh& mesh)
     }
 }
 
-inline glm::vec2 GetCentroid(const std::vector<std::vector<glm::vec3>>& polygon)
+inline glm::dvec2 GetCentroid(const std::vector<std::vector<glm::dvec3>>& polygon)
 {
-    glm::vec2 centroid;
+    glm::dvec2 centroid;
     int n = 0;
 
     for (auto& line : polygon)
