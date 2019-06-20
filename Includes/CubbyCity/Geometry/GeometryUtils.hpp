@@ -95,6 +95,11 @@ inline glm::dvec2 GetCentroid(const std::vector<std::vector<glm::dvec3>>& polygo
     centroid /= n;
     return centroid;
 }
+
+inline glm::dvec3 GetPerp(const glm::dvec3& v)
+{
+    return glm::normalize(glm::dvec3(-v.y, v.x, 0.0));
+}
 }  // namespace CubbyCity
 
 #endif  // CUBBYCITY_GEOMETRY_UTILS_HPP
