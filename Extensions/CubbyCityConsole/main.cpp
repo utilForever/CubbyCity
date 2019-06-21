@@ -25,13 +25,13 @@ int main()
     config.pedestalHeight = 0.0;
     config.offsetX = 0.0;
     config.offsetY = 0.0;
-    config.terrain = true;
+    config.terrain = false;
     config.buildings = true;
-    config.roads = true;
-    config.pedestal = true;
-    config.normals = true;
-    config.splitMesh = true;
-    config.append = true;
+    config.roads = false;
+    config.pedestal = false;
+    config.normals = false;
+    config.splitMesh = false;
+    config.append = false;
 
     Program program(config);
     program.Process();
