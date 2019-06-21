@@ -27,11 +27,17 @@ struct ProgramConfig
     double roadsExtrusionWidth;
     double pedestalHeight;
 
+    std::string fileName;
+    double offsetX;
+    double offsetY;
+
     bool terrain;
     bool buildings;
     bool roads;
     bool pedestal;
     bool normals;
+    bool splitMesh;
+    bool append;
 };
 }  // namespace CubbyCity
 

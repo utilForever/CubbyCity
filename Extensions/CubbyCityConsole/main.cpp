@@ -23,11 +23,15 @@ int main()
     config.roadsHeight = 1.0;
     config.roadsExtrusionWidth = 5.0;
     config.pedestalHeight = 0.0;
+    config.offsetX = 0.0;
+    config.offsetY = 0.0;
     config.terrain = false;
     config.buildings = true;
     config.roads = false;
     config.pedestal = false;
     config.normals = false;
+    config.splitMesh = false;
+    config.append = false;
 
     Program program(config);
     program.Process();
