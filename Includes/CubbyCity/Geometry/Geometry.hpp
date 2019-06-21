@@ -20,6 +20,9 @@ namespace CubbyCity
 class Geometry
 {
  public:
+    Geometry() = default;
+    Geometry(ProgramConfig config);
+
     void ParseTiles(const std::string& tileX, const std::string& tileY,
                     int tileZ);
 
@@ -28,9 +31,29 @@ class Geometry
 
     void AdjustTerrainEdges();
 
-    void BuildMeshes(const ProgramConfig& config);
+    void BuildMeshes();
 
  private:
+    void BuildTerrainMesh(const Tile& tile, const glm::dvec2& offset,
+                          const std::unique_ptr<HeightData>& texData);
+
+    void BuildPedestal(const Tile& tile, const glm::dvec2& offset,
+                       const std::unique_ptr<HeightData>& texData);
+
+    void BuildVectorTileMesh(const Tile& tile, const glm::dvec2& offset,
+                             const std::unique_ptr<HeightData>& texData);
+
+    void BuildBuildings(const std::vector<Polygon>& polygons,
+                        std::unique_ptr<PolygonMesh>& mesh, const Tile& tile,
+                        const std::unique_ptr<HeightData>& texData,
+                        double minHeight, double height);
+
+    void BuildingRoads(const std::vector<Line>& lines,
+                       std::unique_ptr<PolygonMesh>& mesh, const Tile& tile,
+                       const std::unique_ptr<HeightData>& texData) const;
+
+    void ExportToFile();
+
     static void BuildPlane(std::vector<PolygonVertex>& outVertices,
                            std::vector<unsigned int>& outIndices, int width,
                            int height, int nw, int nh, bool flip = false);
@@ -58,9 +81,11 @@ class Geometry
                                         size_t i, bool forward);
 
     std::vector<Tile> m_tiles;
-    std::vector<std::unique_ptr<PolygonMesh>> meshes;
+    std::vector<std::unique_ptr<PolygonMesh>> m_meshes;
     std::unordered_map<Tile, std::unique_ptr<HeightData>> m_heightData;
     std::unordered_map<Tile, std::unique_ptr<TileData>> m_vectorTileData;
+
+    ProgramConfig m_config;
 };
 }  // namespace CubbyCity
 
