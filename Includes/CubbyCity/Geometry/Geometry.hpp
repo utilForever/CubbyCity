@@ -21,7 +21,7 @@ class Geometry
 {
  public:
     Geometry() = default;
-    Geometry(ProgramConfig config);
+    explicit Geometry(ProgramConfig config);
 
     void ParseTiles(const std::string& tileX, const std::string& tileY,
                     int tileZ);
