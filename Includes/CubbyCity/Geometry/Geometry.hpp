@@ -57,6 +57,11 @@ class Geometry
     static double SampleElevation(glm::dvec2 position,
                                   const std::unique_ptr<HeightData>& texData);
 
+    static void AddPolygonPolylinePoint(Line& line, glm::dvec3 cur,
+                                        glm::dvec3 next, glm::dvec3 last,
+                                        double extrude, size_t lineDataSize,
+                                        size_t i, bool forward);
+
     std::vector<Tile> m_tiles;
     std::vector<std::unique_ptr<PolygonMesh>> meshes;
     std::unordered_map<Tile, std::unique_ptr<HeightData>> m_heightData;

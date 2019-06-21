@@ -505,6 +505,35 @@ void Geometry::BuildPolygon(const Polygon& polygon, double height,
     }
 }
 
+void Geometry::AddPolygonPolylinePoint(Line& line, glm::dvec3 cur,
+                                       glm::dvec3 next, glm::dvec3 last,
+                                       double extrude, size_t lineDataSize,
+                                       size_t i, bool forward)
+{
+    glm::dvec3 n0 = GetPerp(cur - last);
+    glm::dvec3 n1 = GetPerp(next - cur);
+    bool right = glm::cross(n1, n0).z > 0.0;
+
+    if ((i == 1 && forward) || (i == lineDataSize - 2 && !forward))
+    {
+        line.push_back(last + n0 * extrude);
+        line.push_back(last - n0 * extrude);
+    }
+
+    if (right)
+    {
+        glm::dvec3 d0 = glm::normalize(last - cur);
+        glm::dvec3 d1 = glm::normalize(next - cur);
+        glm::dvec3 miter = ComputeMiterVector(d0, d1, n0, n1);
+        line.push_back(cur - miter * extrude);
+    }
+    else
+    {
+        line.push_back(cur - n0 * extrude);
+        line.push_back(cur - n1 * extrude);
+    }
+}
+
 double Geometry::SampleElevation(glm::dvec2 position,
                                  const std::unique_ptr<HeightData>& texData)
 {
