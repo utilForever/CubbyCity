@@ -16,10 +16,22 @@ int main()
     config.tileX = "19294";
     config.tileY = "24642";
     config.tileZ = 16;
+    config.terrainSubdivision = 64;
+    config.terrainExtrusionScale = 1.0;
+    config.buildingsHeight = 0.0;
+    config.buildingsExtrusionScale = 1.0;
+    config.roadsHeight = 1.0;
+    config.roadsExtrusionWidth = 5.0;
+    config.pedestalHeight = 0.0;
+    config.offsetX = 0.0;
+    config.offsetY = 0.0;
     config.terrain = false;
-    config.terrainExtrusionScale = 1.0f;
     config.buildings = true;
     config.roads = false;
+    config.pedestal = false;
+    config.normals = false;
+    config.splitMesh = false;
+    config.append = false;
 
     Program program(config);
     program.Process();

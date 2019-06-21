@@ -7,11 +7,11 @@
 #ifndef CUBBYCITY_CURL_DOWNLOADER_HPP
 #define CUBBYCITY_CURL_DOWNLOADER_HPP
 
-#include <CubbyCity/Platform/Downloader.hpp>
+#include <CubbyCity/Platform/IDownloader.hpp>
 
 namespace CubbyCity
 {
-class CurlDownloader : public Downloader
+class CurlDownloader : public IDownloader
 {
  public:
     bool DownloadData(std::string& out, const std::string& url) override;

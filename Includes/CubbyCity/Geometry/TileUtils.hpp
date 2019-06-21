@@ -4,30 +4,19 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
-#ifndef CUBBYCITY_UTILS_HPP
-#define CUBBYCITY_UTILS_HPP
+#ifndef CUBBYCITY_TILE_UTILS_HPP
+#define CUBBYCITY_TILE_UTILS_HPP
 
-#include <sstream>
-#include <string>
-#include <tuple>
+#include <CubbyCity/Commons/CommonUtils.hpp>
+
+#include <glm/glm.hpp>
+
 #include <vector>
+#include <tuple>
+#include <string>
 
 namespace CubbyCity
 {
-inline std::vector<std::string> SplitString(const std::string& s, char delim)
-{
-    std::vector<std::string> elems;
-    std::stringstream ss(s);
-    std::string item;
-
-    while (std::getline(ss, item, delim))
-    {
-        elems.emplace_back(item);
-    }
-
-    return elems;
-}
-
 inline std::tuple<int, int> ExtractTileRange(const std::string& range)
 {
     const std::vector<std::string> tilesRange = SplitString(range, '/');
@@ -55,6 +44,11 @@ inline std::tuple<int, int> ExtractTileRange(const std::string& range)
 
     return std::make_tuple(start, end);
 }
+
+inline bool IsWithinTileRange(const glm::dvec2& pos)
+{
+    return pos.x >= -1.0 && pos.x <= 1.0 && pos.y >= -1.0 && pos.y <= 1.0;
+}
 }  // namespace CubbyCity
 
-#endif  // CUBBYCITY_UTILS_HPP
+#endif  // CUBBYCITY_TILE_UTILS_HPP

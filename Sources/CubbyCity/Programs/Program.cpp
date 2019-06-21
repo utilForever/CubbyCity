@@ -8,7 +8,8 @@
 
 namespace CubbyCity
 {
-Program::Program(ProgramConfig config) : m_config(std::move(config))
+Program::Program(ProgramConfig config)
+    : m_config(std::move(config)), m_geometry(config)
 {
     // Do nothing
 }
@@ -24,5 +25,7 @@ void Program::Process()
     {
         m_geometry.AdjustTerrainEdges();
     }
+
+    m_geometry.BuildMeshes();
 }
 }  // namespace CubbyCity

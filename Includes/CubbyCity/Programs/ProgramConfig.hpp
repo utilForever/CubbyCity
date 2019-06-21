@@ -19,11 +19,25 @@ struct ProgramConfig
     std::string tileY;
     int tileZ;
 
-    bool terrain;
-    float terrainExtrusionScale;
+    int terrainSubdivision;
+    double terrainExtrusionScale;
+    double buildingsHeight;
+    double buildingsExtrusionScale;
+    double roadsHeight;
+    double roadsExtrusionWidth;
+    double pedestalHeight;
 
+    std::string fileName;
+    double offsetX;
+    double offsetY;
+
+    bool terrain;
     bool buildings;
     bool roads;
+    bool pedestal;
+    bool normals;
+    bool splitMesh;
+    bool append;
 };
 }  // namespace CubbyCity
 
