@@ -15,7 +15,7 @@ namespace CubbyCity
 class Program
 {
  public:
-    Program(ProgramConfig config);
+    explicit Program(ProgramConfig config);
 
     void Process();
 

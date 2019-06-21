@@ -46,7 +46,7 @@ struct Feature
 
 struct Layer
 {
-    Layer(std::string _name) : name(std::move(_name))
+    explicit Layer(const std::string& _name) : name(std::move(_name))
     {
         // Do nothing
     }
