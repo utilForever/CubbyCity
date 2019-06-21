@@ -8,6 +8,8 @@
 #include <CubbyCity/Geometry/Geometry.hpp>
 #include <CubbyCity/Platform/DownloadUtils.hpp>
 
+#include <earcut.hpp/include/mapbox/earcut.hpp>
+
 namespace CubbyCity
 {
 void Geometry::ParseTiles(const std::string& tileX, const std::string& tileY,
@@ -441,6 +443,66 @@ double Geometry::BuildPolygonExtrusion(
     }
 
     return cz;
+}
+
+void Geometry::BuildPolygon(const Polygon& polygon, double height,
+                            std::vector<PolygonVertex>& outVertices,
+                            std::vector<unsigned int>& outIndices,
+                            double centroidHeight, double inverseTileScale)
+{
+    std::vector<std::vector<std::array<double, 2>>> poly;
+    for (auto& line : polygon)
+    {
+        std::vector<std::array<double, 2>> points;
+        points.reserve(line.size());
+
+        for (const auto& point : line)
+        {
+            points.push_back({ point.x, point.y });
+        }
+
+        poly.push_back(points);
+    }
+    mapbox::detail::Earcut<unsigned int> earcut;
+    earcut(poly);
+
+    const auto vertexDataOffset = static_cast<unsigned int>(outVertices.size());
+
+    if (earcut.indices.empty())
+    {
+        return;
+    }
+
+    if (vertexDataOffset == 0)
+    {
+        outIndices = std::move(earcut.indices);
+    }
+    else
+    {
+        outIndices.reserve(outIndices.size() + earcut.indices.size());
+
+        for (auto i : earcut.indices)
+        {
+            outIndices.push_back(vertexDataOffset + i);
+        }
+    }
+
+    static glm::vec3 normal(0.0, 0.0, 1.0);
+
+    outVertices.reserve(outVertices.size() + earcut.vertices);
+
+    centroidHeight *= inverseTileScale;
+
+    for (const auto& line : polygon)
+    {
+        for (const auto& vertex : line)
+        {
+            const glm::dvec2 position(vertex[0], vertex[1]);
+            const glm::dvec3 coord(position.x, position.y,
+                                   height + centroidHeight);
+            outVertices.push_back({ coord, normal });
+        }
+    }
 }
 
 double Geometry::SampleElevation(glm::dvec2 position,

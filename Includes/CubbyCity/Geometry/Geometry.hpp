@@ -49,6 +49,11 @@ class Geometry
         std::vector<unsigned int>& outIndices,
         const std::unique_ptr<HeightData>& elevation, double inverseTileScale);
 
+    static void BuildPolygon(const Polygon& polygon, double height,
+                             std::vector<PolygonVertex>& outVertices,
+                             std::vector<unsigned int>& outIndices,
+                             double centroidHeight, double inverseTileScale);
+
     static double SampleElevation(glm::dvec2 position,
                                   const std::unique_ptr<HeightData>& texData);
 
