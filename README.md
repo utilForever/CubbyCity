@@ -1,6 +1,6 @@
 # CubbyCity
 
-<img src="https://github.com/utilForever/CubbyCity/blob/master/Medias/Logo.png" width=256 height=256 />
+<img src="./Medias/Logos/Logo.png" width=256 height=256 />
 
 [![License](https://img.shields.io/badge/Licence-MIT-blue.svg)](https://github.com/utilForever/CubbyCity/blob/master/LICENSE) [![Build Status](https://travis-ci.org/utilForever/CubbyCity.svg?branch=master)](https://travis-ci.org/utilForever/CubbyCity/branches) [![Build status](https://ci.appveyor.com/api/projects/status/github/utilForever/CubbyCity?branch=master&svg=true)](https://ci.appveyor.com/project/utilForever/CubbyCity/branch/master) [![Build Status](https://dev.azure.com/utilforever/CubbyCity/_apis/build/status/utilForever.CubbyCity?branchName=master)](https://dev.azure.com/utilforever/CubbyCity/_build/latest?definitionId=5&branchName=master)
 
@@ -16,6 +16,8 @@ CubbyCity is simple GIS(Geographic Information System) program to analyze the ca
 - Support various geometry such as buildings, road network with optional extrusion and terrain
 - Simulate urban engineering problems such as gentrification
 - Support console and GUI simulator program
+
+<img src="./Medias/Screenshots/NewYork.png" />
 
 ## Contact
 
