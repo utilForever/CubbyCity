@@ -7,7 +7,7 @@
 #ifndef CUBBYCITY_TILE_UTILS_HPP
 #define CUBBYCITY_TILE_UTILS_HPP
 
-#include <CubbyCity/Commons/Utils.hpp>
+#include <CubbyCity/Commons/CommonUtils.hpp>
 
 #include <glm/glm.hpp>
 

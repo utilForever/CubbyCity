@@ -4,8 +4,8 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
-#ifndef CUBBYCITY_UTILS_HPP
-#define CUBBYCITY_UTILS_HPP
+#ifndef CUBBYCITY_COMMON_UTILS_HPP
+#define CUBBYCITY_COMMON_UTILS_HPP
 
 #include <sstream>
 #include <string>
@@ -28,4 +28,4 @@ inline std::vector<std::string> SplitString(const std::string& s, const char del
 }
 }  // namespace CubbyCity
 
-#endif  // CUBBYCITY_UTILS_HPP
+#endif  // CUBBYCITY_COMMON_UTILS_HPP

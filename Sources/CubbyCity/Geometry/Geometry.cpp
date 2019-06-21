@@ -4,7 +4,6 @@
 // personal capacity and are not conveying any rights to any intellectual
 // property of any third parties.
 
-#include <CubbyCity/Commons/Utils.hpp>
 #include <CubbyCity/Exporter/OBJExporter.hpp>
 #include <CubbyCity/Geometry/Geometry.hpp>
 #include <CubbyCity/Geometry/TileUtils.hpp>
