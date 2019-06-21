@@ -636,11 +636,6 @@ double Geometry::BuildPolygonExtrusion(
     return cz;
 }
 
-void Geometry::ParseTiles(const std::string& tileX, const std::string& tileY,
-    int tileZ)
-{
-}
-
 void Geometry::BuildPolygon(const Polygon& polygon, double height,
                             std::vector<PolygonVertex>& outVertices,
                             std::vector<unsigned int>& outIndices,
