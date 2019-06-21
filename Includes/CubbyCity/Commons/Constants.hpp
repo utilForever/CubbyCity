@@ -11,6 +11,7 @@ namespace CubbyCity
 {
 constexpr double RADIUS_EARTH = 6378137.0;
 constexpr double MATH_PI = 3.14159265358979323846;
+constexpr double EPSILON = 1e-5;
 
 constexpr static double INV_360 = 1.0 / 360.0;
 constexpr static double INV_180 = 1.0 / 180.0;
