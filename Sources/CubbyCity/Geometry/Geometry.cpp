@@ -194,6 +194,204 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
                 meshes.push_back(std::move(wall));
             }
         }
+
+        // Build vector tile mesh
+        if (config.buildings || config.roads)
+        {
+            const auto& data = m_vectorTileData[tile];
+            if (!data)
+            {
+                continue;
+            }
+
+            const static std::string keyHeight("height");
+            const static std::string keyMinHeight("min_height");
+
+            for (const auto& layer : data->layers)
+            {
+                for (auto feature : layer.features)
+                {
+                    if (texData && layer.name != "buildings" &&
+                        layer.name != "roads")
+                    {
+                        continue;
+                    }
+
+                    auto itHeight = feature.props.numericProps.find(keyHeight);
+                    auto itMinHeight =
+                        feature.props.numericProps.find(keyMinHeight);
+                    double scale =
+                        tile.invScale * config.buildingsExtrusionScale;
+                    double height = 0.0;
+                    double minHeight = 0.0;
+
+                    if (layer.name == "buildings")
+                    {
+                        height = config.buildingsHeight * tile.invScale;
+                    }
+
+                    if (itHeight != feature.props.numericProps.end())
+                    {
+                        height = itHeight->second * scale;
+                    }
+
+                    if (texData && layer.name != "roads" && height == 0.0)
+                    {
+                        continue;
+                    }
+
+                    if (itMinHeight != feature.props.numericProps.end())
+                    {
+                        minHeight = itMinHeight->second * scale;
+                    }
+
+                    auto mesh = std::unique_ptr<PolygonMesh>(new PolygonMesh);
+
+                    if (config.buildings)
+                    {
+                        for (const Polygon& polygon : feature.polygons)
+                        {
+                            double centroidHeight = 0.0;
+                            if (minHeight != height)
+                            {
+                                centroidHeight = BuildPolygonExtrusion(
+                                    polygon, minHeight, height, mesh->vertices,
+                                    mesh->indices, texData, tile.invScale);
+                            }
+
+                            BuildPolygon(polygon, height, mesh->vertices,
+                                         mesh->indices, centroidHeight,
+                                         tile.invScale);
+                        }
+                    }
+
+                    if (config.roads)
+                    {
+                        for (Line& line : feature.lines)
+                        {
+                            Polygon polygon;
+                            double extrude =
+                                config.roadsExtrusionWidth * tile.invScale;
+                            polygon.emplace_back();
+                            Line& polygonLine = polygon.back();
+
+                            if (line.size() == 2)
+                            {
+                                glm::dvec3 cur = line[0];
+                                glm::dvec3 next = line[1];
+                                glm::dvec3 n0 = GetPerp(next - cur);
+
+                                polygonLine.push_back(cur - n0 * extrude);
+                                polygonLine.push_back(cur + n0 * extrude);
+                                polygonLine.push_back(next + n0 * extrude);
+                                polygonLine.push_back(next - n0 * extrude);
+                            }
+                            else
+                            {
+                                glm::dvec3 last = line[0];
+                                for (size_t i = 1; i < line.size() - 1; ++i)
+                                {
+                                    glm::dvec3 cur = line[i];
+                                    glm::dvec3 next = line[i + 1];
+                                    AddPolygonPolylinePoint(
+                                        polygonLine, cur, next, last, extrude,
+                                        line.size(), i, true);
+                                    last = cur;
+                                }
+
+                                last = line[line.size() - 1];
+                                for (int i = static_cast<int>(line.size()) - 2;
+                                     i > 0; --i)
+                                {
+                                    glm::dvec3 cur = line[i];
+                                    glm::dvec3 next = line[i - 1];
+                                    AddPolygonPolylinePoint(
+                                        polygonLine, cur, next, last, extrude,
+                                        line.size(), i, false);
+                                    last = cur;
+                                }
+                            }
+
+                            if (polygonLine.size() < 4)
+                            {
+                                continue;
+                            }
+
+                            int count = 0;
+                            for (size_t i = 0; i < polygonLine.size(); i++)
+                            {
+                                size_t j = (i + 1) % polygonLine.size();
+                                size_t k = (i + 2) % polygonLine.size();
+                                double z =
+                                    (polygonLine[j].x - polygonLine[i].x) *
+                                        (polygonLine[k].y - polygonLine[j].y) -
+                                    (polygonLine[j].y - polygonLine[i].y) *
+                                        (polygonLine[k].x - polygonLine[j].x);
+
+                                if (z < 0)
+                                {
+                                    count--;
+                                }
+                                else if (z > 0)
+                                {
+                                    count++;
+                                }
+                            }
+
+                            if (count > 0)
+                            {
+                                // CCW
+                                std::reverse(polygonLine.begin(),
+                                             polygonLine.end());
+                            }
+
+                            // Close the polygon
+                            polygonLine.push_back(polygonLine[0]);
+
+                            size_t vertexOffset = mesh->vertices.size();
+
+                            if (config.roadsHeight > 0)
+                            {
+                                BuildPolygonExtrusion(
+                                    polygon, 0.0,
+                                    config.roadsHeight * tile.invScale,
+                                    mesh->vertices, mesh->indices, nullptr,
+                                    tile.invScale);
+                            }
+
+                            BuildPolygon(polygon,
+                                         config.roadsHeight * tile.invScale,
+                                         mesh->vertices, mesh->indices, 0.0f,
+                                         tile.invScale);
+
+                            if (texData)
+                            {
+                                for (auto it =
+                                         mesh->vertices.begin() + vertexOffset;
+                                     it != mesh->vertices.end(); ++it)
+                                {
+                                    it->position.z +=
+                                        SampleElevation(
+                                            glm::vec2(it->position.x,
+                                                      it->position.y),
+                                            texData) *
+                                        tile.invScale;
+                                }
+                            }
+                        }
+
+                        if (config.normals && config.terrain)
+                        {
+                            ComputeNormals(*mesh);
+                        }
+                    }
+
+                    // Add local mesh offset
+                    mesh->offset = offset;
+                    meshes.push_back(std::move(mesh));
+                }
+            }
+        }
     }
 }
 
