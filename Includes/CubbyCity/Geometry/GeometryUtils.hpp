@@ -11,6 +11,8 @@
 
 #include <glm/glm.hpp>
 
+#include <algorithm>
+
 namespace CubbyCity
 {
 inline glm::dvec2 ConvertLonLatToMeters(const glm::dvec2 lonLat)
@@ -72,7 +74,8 @@ inline void ComputeNormals(PolygonMesh& mesh)
     }
 }
 
-inline glm::dvec2 GetCentroid(const std::vector<std::vector<glm::dvec3>>& polygon)
+inline glm::dvec2 GetCentroid(
+    const std::vector<std::vector<glm::dvec3>>& polygon)
 {
     glm::dvec2 centroid;
     int n = 0;
@@ -99,6 +102,30 @@ inline glm::dvec2 GetCentroid(const std::vector<std::vector<glm::dvec3>>& polygo
 inline glm::dvec3 GetPerp(const glm::dvec3& v)
 {
     return glm::normalize(glm::dvec3(-v.y, v.x, 0.0));
+}
+
+inline glm::vec3 ComputeMiterVector(const glm::dvec3& d0, const glm::dvec3& d1,
+                                    const glm::dvec3& n0, const glm::dvec3& n1)
+{
+    glm::dvec3 miter = glm::normalize(n0 + n1);
+    const double miterl2 = glm::dot(miter, miter);
+
+    if (miterl2 < std::numeric_limits<double>::epsilon())
+    {
+        miter = glm::dvec3(n1.y - n0.y, n0.x - n1.x, 0.0);
+    }
+    else
+    {
+        double theta = atan2(d1.y, d1.x) - atan2(d0.y, d0.x);
+        if (theta < 0.0)
+        {
+            theta += 2 * MATH_PI;
+        }
+
+        miter *= 1.f / std::max<double>(sin(theta * 0.5), EPSILON);
+    }
+
+    return miter;
 }
 }  // namespace CubbyCity
 
