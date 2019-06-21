@@ -5,6 +5,7 @@
 // property of any third parties.
 
 #include <CubbyCity/Commons/Utils.hpp>
+#include <CubbyCity/Exporter/OBJExporter.hpp>
 #include <CubbyCity/Geometry/Geometry.hpp>
 #include <CubbyCity/Platform/DownloadUtils.hpp>
 
@@ -393,6 +394,25 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
             }
         }
     }
+
+    std::string outFile;
+
+    if (!config.fileName.empty())
+    {
+        outFile = config.fileName;
+    }
+    else
+    {
+        outFile = std::to_string(origin.x) + "." + std::to_string(origin.y) +
+                  "." + std::to_string(origin.z);
+    }
+
+    std::string outputOBJ = outFile + ".obj";
+
+    // Save output OBJ file
+    OBJExporter exporter;
+    exporter.Save(outputOBJ, config.splitMesh, meshes, config.offsetX,
+                  config.offsetY, config.append, config.normals);
 }
 
 std::tuple<int, int> Geometry::ExtractTileRange(const std::string& range) const
