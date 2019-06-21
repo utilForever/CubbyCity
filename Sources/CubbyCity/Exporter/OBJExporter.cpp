@@ -156,7 +156,7 @@ void OBJExporter::Save(const std::string& outputOBJ, bool splitMeshes,
 }
 
 void OBJExporter::AddPositions(std::ostream& file, const PolygonMesh& mesh,
-                               double offsetX, double offsetY)
+                               double offsetX, double offsetY) const
 {
     for (auto vertex : mesh.vertices)
     {
@@ -166,7 +166,7 @@ void OBJExporter::AddPositions(std::ostream& file, const PolygonMesh& mesh,
     }
 }
 
-void OBJExporter::AddNormals(std::ostream& file, const PolygonMesh& mesh)
+void OBJExporter::AddNormals(std::ostream& file, const PolygonMesh& mesh) const
 {
     for (auto vertex : mesh.vertices)
     {
@@ -176,9 +176,9 @@ void OBJExporter::AddNormals(std::ostream& file, const PolygonMesh& mesh)
 }
 
 void OBJExporter::AddFaces(std::ostream& file, const PolygonMesh& mesh,
-                           size_t indexOffset, bool normals)
+                           size_t indexOffset, bool normals) const
 {
-    for (int i = 0; i < mesh.indices.size(); i += 3)
+    for (size_t i = 0; i < mesh.indices.size(); i += 3)
     {
         file << "f " << mesh.indices[i] + indexOffset + 1
              << (normals

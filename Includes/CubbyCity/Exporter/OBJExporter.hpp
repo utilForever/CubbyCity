@@ -20,10 +20,10 @@ class OBJExporter : public IExporter
 
  private:
     void AddPositions(std::ostream& file, const PolygonMesh& mesh,
-                      double offsetX, double offsetY);
-    void AddNormals(std::ostream& file, const PolygonMesh& mesh);
+                      double offsetX, double offsetY) const;
+    void AddNormals(std::ostream& file, const PolygonMesh& mesh) const;
     void AddFaces(std::ostream& file, const PolygonMesh& mesh,
-                  size_t indexOffset, bool normals);
+                  size_t indexOffset, bool normals) const;
 };
 }  // namespace CubbyCity
 
