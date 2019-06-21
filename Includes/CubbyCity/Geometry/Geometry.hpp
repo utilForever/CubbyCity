@@ -31,8 +31,6 @@ class Geometry
     void BuildMeshes(const ProgramConfig& config);
 
  private:
-    std::tuple<int, int> ExtractTileRange(const std::string& range) const;
-
     static void BuildPlane(std::vector<PolygonVertex>& outVertices,
                            std::vector<unsigned int>& outIndices, int width,
                            int height, int nw, int nh, bool flip = false);
@@ -53,9 +51,6 @@ class Geometry
                              std::vector<PolygonVertex>& outVertices,
                              std::vector<unsigned int>& outIndices,
                              double centroidHeight, double inverseTileScale);
-
-    static double SampleElevation(glm::dvec2 position,
-                                  const std::unique_ptr<HeightData>& texData);
 
     static void AddPolygonPolylinePoint(Line& line, glm::dvec3 cur,
                                         glm::dvec3 next, glm::dvec3 last,

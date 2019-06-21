@@ -7,6 +7,7 @@
 #include <CubbyCity/Commons/Utils.hpp>
 #include <CubbyCity/Exporter/OBJExporter.hpp>
 #include <CubbyCity/Geometry/Geometry.hpp>
+#include <CubbyCity/Geometry/TileUtils.hpp>
 #include <CubbyCity/Platform/DownloadUtils.hpp>
 
 #include <earcut.hpp/include/mapbox/earcut.hpp>
@@ -415,34 +416,6 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
                   config.offsetY, config.append, config.normals);
 }
 
-std::tuple<int, int> Geometry::ExtractTileRange(const std::string& range) const
-{
-    const std::vector<std::string> tilesRange = SplitString(range, '/');
-    if (tilesRange.size() > 2 || tilesRange.empty())
-    {
-        throw std::invalid_argument("Bad tile parameter");
-    }
-
-    int start, end;
-
-    if (tilesRange.size() == 2)
-    {
-        start = std::stoi(tilesRange[0]);
-        end = std::stoi(tilesRange[1]);
-    }
-    else
-    {
-        start = end = std::stoi(tilesRange[0]);
-    }
-
-    if (end < start)
-    {
-        throw std::invalid_argument("Bad tile parameter");
-    }
-
-    return std::make_tuple(start, end);
-}
-
 void Geometry::BuildPlane(std::vector<PolygonVertex>& outVertices,
                           std::vector<unsigned int>& outIndices, int width,
                           int height, int nw, int nh, bool flip)
@@ -663,6 +636,11 @@ double Geometry::BuildPolygonExtrusion(
     return cz;
 }
 
+void Geometry::ParseTiles(const std::string& tileX, const std::string& tileY,
+    int tileZ)
+{
+}
+
 void Geometry::BuildPolygon(const Polygon& polygon, double height,
                             std::vector<PolygonVertex>& outVertices,
                             std::vector<unsigned int>& outIndices,
@@ -750,53 +728,5 @@ void Geometry::AddPolygonPolylinePoint(Line& line, glm::dvec3 cur,
         line.push_back(cur - n0 * extrude);
         line.push_back(cur - n1 * extrude);
     }
-}
-
-double Geometry::SampleElevation(glm::dvec2 position,
-                                 const std::unique_ptr<HeightData>& texData)
-{
-    if (!texData)
-    {
-        return 0.0;
-    }
-
-    if (!IsWithinTileRange(position))
-    {
-        position = glm::clamp(position, glm::dvec2(-1.0), glm::dvec2(1.0));
-    }
-
-    // Normalize vertex coordinates into the texture coordinates range
-    const double u = (position.x * 0.5 + 0.5) * texData->width;
-    double v = (position.y * 0.5 + 0.5) * texData->height;
-
-    // Flip v coordinate according to tile coordinates
-    v = static_cast<double>(texData->height) - v;
-
-    const double alpha = u - floor(u);
-    const double beta = v - floor(v);
-
-    int ii0 = static_cast<int>(floor(u));
-    int jj0 = static_cast<int>(floor(v));
-    int ii1 = ii0 + 1;
-    int jj1 = jj0 + 1;
-
-    // Clamp on borders
-    ii0 = std::min(ii0, texData->width - 1);
-    jj0 = std::min(jj0, texData->height - 1);
-    ii1 = std::min(ii1, texData->width - 1);
-    jj1 = std::min(jj1, texData->height - 1);
-
-    // Sample four corners of the current texel
-    const double s0 = texData->elevation[ii0][jj0];
-    const double s1 = texData->elevation[ii0][jj1];
-    const double s2 = texData->elevation[ii1][jj0];
-    const double s3 = texData->elevation[ii1][jj1];
-
-    // Sample the bilinear height from the elevation texture
-    const double bilinearHeight = (1 - beta) * (1 - alpha) * s0 +
-                                  (1 - beta) * alpha * s1 +
-                                  beta * (1 - alpha) * s2 + alpha * beta * s3;
-
-    return bilinearHeight;
 }
 }  // namespace CubbyCity

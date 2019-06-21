@@ -8,10 +8,12 @@
 #define CUBBYCITY_GEOMETRY_UTILS_HPP
 
 #include <CubbyCity/Commons/Constants.hpp>
+#include <CubbyCity/Geometry/TileUtils.hpp>
 
 #include <glm/glm.hpp>
 
 #include <algorithm>
+#include <memory>
 
 namespace CubbyCity
 {
@@ -44,9 +46,52 @@ inline glm::dvec4 GetTileBounds(int x, int y, int z, double tileSize)
                              1.0 / tileSize));
 }
 
-inline bool IsWithinTileRange(const glm::vec2& pos)
+inline double SampleElevation(glm::dvec2 position,
+                              const std::unique_ptr<HeightData>& texData)
 {
-    return pos.x >= -1.0 && pos.x <= 1.0 && pos.y >= -1.0 && pos.y <= 1.0;
+    if (!texData)
+    {
+        return 0.0;
+    }
+
+    if (!IsWithinTileRange(position))
+    {
+        position = glm::clamp(position, glm::dvec2(-1.0), glm::dvec2(1.0));
+    }
+
+    // Normalize vertex coordinates into the texture coordinates range
+    const double u = (position.x * 0.5 + 0.5) * texData->width;
+    double v = (position.y * 0.5 + 0.5) * texData->height;
+
+    // Flip v coordinate according to tile coordinates
+    v = static_cast<double>(texData->height) - v;
+
+    const double alpha = u - floor(u);
+    const double beta = v - floor(v);
+
+    int ii0 = static_cast<int>(floor(u));
+    int jj0 = static_cast<int>(floor(v));
+    int ii1 = ii0 + 1;
+    int jj1 = jj0 + 1;
+
+    // Clamp on borders
+    ii0 = std::min(ii0, texData->width - 1);
+    jj0 = std::min(jj0, texData->height - 1);
+    ii1 = std::min(ii1, texData->width - 1);
+    jj1 = std::min(jj1, texData->height - 1);
+
+    // Sample four corners of the current texel
+    const double s0 = texData->elevation[ii0][jj0];
+    const double s1 = texData->elevation[ii0][jj1];
+    const double s2 = texData->elevation[ii1][jj0];
+    const double s3 = texData->elevation[ii1][jj1];
+
+    // Sample the bilinear height from the elevation texture
+    const double bilinearHeight = (1 - beta) * (1 - alpha) * s0 +
+                                  (1 - beta) * alpha * s1 +
+                                  beta * (1 - alpha) * s2 + alpha * beta * s3;
+
+    return bilinearHeight;
 }
 
 inline void ComputeNormals(PolygonMesh& mesh)

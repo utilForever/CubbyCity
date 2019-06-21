@@ -9,12 +9,11 @@
 
 #include <sstream>
 #include <string>
-#include <tuple>
 #include <vector>
 
 namespace CubbyCity
 {
-inline std::vector<std::string> SplitString(const std::string& s, char delim)
+inline std::vector<std::string> SplitString(const std::string& s, const char delim)
 {
     std::vector<std::string> elems;
     std::stringstream ss(s);
@@ -26,34 +25,6 @@ inline std::vector<std::string> SplitString(const std::string& s, char delim)
     }
 
     return elems;
-}
-
-inline std::tuple<int, int> ExtractTileRange(const std::string& range)
-{
-    const std::vector<std::string> tilesRange = SplitString(range, '/');
-    if (tilesRange.size() > 2 || tilesRange.empty())
-    {
-        throw std::invalid_argument("Bad tile parameter");
-    }
-
-    int start, end;
-
-    if (tilesRange.size() == 2)
-    {
-        start = std::stoi(tilesRange[0]);
-        end = std::stoi(tilesRange[1]);
-    }
-    else
-    {
-        start = end = std::stoi(tilesRange[0]);
-    }
-
-    if (end < start)
-    {
-        throw std::invalid_argument("Bad tile parameter");
-    }
-
-    return std::make_tuple(start, end);
 }
 }  // namespace CubbyCity
 
