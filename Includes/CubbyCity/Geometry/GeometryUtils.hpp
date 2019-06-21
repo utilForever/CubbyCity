@@ -102,11 +102,11 @@ inline void ComputeNormals(PolygonMesh& mesh)
         const int i2 = mesh.indices[i + 1];
         const int i3 = mesh.indices[i + 2];
 
-        const glm::vec3& v1 = mesh.vertices[i1].position;
-        const glm::vec3& v2 = mesh.vertices[i2].position;
-        const glm::vec3& v3 = mesh.vertices[i3].position;
+        const glm::dvec3& v1 = mesh.vertices[i1].position;
+        const glm::dvec3& v2 = mesh.vertices[i2].position;
+        const glm::dvec3& v3 = mesh.vertices[i3].position;
 
-        const glm::vec3 d = glm::normalize(glm::cross(v2 - v1, v3 - v1));
+        const glm::dvec3 d = glm::normalize(glm::cross(v2 - v1, v3 - v1));
 
         mesh.vertices[i1].normal += d;
         mesh.vertices[i2].normal += d;
@@ -122,7 +122,7 @@ inline void ComputeNormals(PolygonMesh& mesh)
 inline glm::dvec2 GetCentroid(
     const std::vector<std::vector<glm::dvec3>>& polygon)
 {
-    glm::dvec2 centroid;
+    glm::dvec2 centroid{};
     int n = 0;
 
     for (auto& line : polygon)
@@ -149,8 +149,8 @@ inline glm::dvec3 GetPerp(const glm::dvec3& v)
     return glm::normalize(glm::dvec3(-v.y, v.x, 0.0));
 }
 
-inline glm::vec3 ComputeMiterVector(const glm::dvec3& d0, const glm::dvec3& d1,
-                                    const glm::dvec3& n0, const glm::dvec3& n1)
+inline glm::dvec3 ComputeMiterVector(const glm::dvec3& d0, const glm::dvec3& d1,
+                                     const glm::dvec3& n0, const glm::dvec3& n1)
 {
     glm::dvec3 miter = glm::normalize(n0 + n1);
     const double miterl2 = glm::dot(miter, miter);

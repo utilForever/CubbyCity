@@ -373,8 +373,8 @@ void Geometry::BuildMeshes(const ProgramConfig& config)
                                 {
                                     it->position.z +=
                                         SampleElevation(
-                                            glm::vec2(it->position.x,
-                                                      it->position.y),
+                                            glm::dvec2(it->position.x,
+                                                       it->position.y),
                                             texData) *
                                         tile.invScale;
                                 }
@@ -677,7 +677,7 @@ void Geometry::BuildPolygon(const Polygon& polygon, double height,
         }
     }
 
-    static glm::vec3 normal(0.0, 0.0, 1.0);
+    static glm::dvec3 normal(0.0, 0.0, 1.0);
 
     outVertices.reserve(outVertices.size() + earcut.vertices);
 

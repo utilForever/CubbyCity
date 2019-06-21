@@ -45,7 +45,7 @@ inline std::tuple<int, int> ExtractTileRange(const std::string& range)
     return std::make_tuple(start, end);
 }
 
-inline bool IsWithinTileRange(const glm::vec2& pos)
+inline bool IsWithinTileRange(const glm::dvec2& pos)
 {
     return pos.x >= -1.0 && pos.x <= 1.0 && pos.y >= -1.0 && pos.y <= 1.0;
 }
