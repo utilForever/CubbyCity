@@ -9,7 +9,7 @@
 #include <CubbyCity/Geometry/TileUtils.hpp>
 #include <CubbyCity/Platform/DownloadUtils.hpp>
 
-#include <earcut.hpp/include/mapbox/earcut.hpp>
+#include <mapbox/earcut.hpp>
 
 #include <utility>
 
