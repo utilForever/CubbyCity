@@ -7,9 +7,27 @@
 #include <CubbyCity/Programs/Program.hpp>
 #include <CubbyCity/Programs/ProgramConfig.hpp>
 
+#include <Clara/include/clara.hpp>
+
+#include <iostream>
+
 using namespace CubbyCity;
 
-int main()
+inline std::string ToString(const clara::Opt& opt)
+{
+    std::ostringstream oss;
+    oss << (clara::Parser() | opt);
+    return oss.str();
+}
+
+inline std::string ToString(const clara::Parser& p)
+{
+    std::ostringstream oss;
+    oss << p;
+    return oss.str();
+}
+
+int main(int argc, char* argv[])
 {
     ProgramConfig config;
     config.apiKey = "ZhvAFy8gTZSk6sPnAn_KwA";
@@ -32,6 +50,26 @@ int main()
     config.normals = false;
     config.splitMesh = false;
     config.append = false;
+
+    bool showHelp = false;
+
+    // Parsing
+    auto parser =
+        clara::Help(showHelp) |
+        clara::Opt(config.tileX, "tileX")["-x"]["--tileX"]("x value of tile");
+
+    auto result = parser.parse(clara::Args(argc, argv));
+    if (!result)
+    {
+        std::cerr << "Error in command line: " << result.errorMessage() << '\n';
+        exit(EXIT_FAILURE);
+    }
+
+    if (showHelp)
+    {
+        std::cout << ToString(parser) << '\n';
+        exit(EXIT_SUCCESS);
+    }
 
     Program program(config);
     program.Process();
