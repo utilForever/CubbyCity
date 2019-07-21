@@ -4,3 +4,6 @@
 [submodule "Libraries/earcut.hpp"]
 	path = Libraries/earcut.hpp
 	url = https://github.com/mapbox/earcut.hpp
+[submodule "Libraries/Clara"]
+	path = Libraries/Clara
+	url = https://github.com/catchorg/Clara
