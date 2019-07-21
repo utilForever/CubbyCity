@@ -23,6 +23,7 @@ include_directories(Libraries/earcut.hpp/include)
 include_directories(Libraries/glm)
 include_directories(Libraries/stb)
 include_directories(Libraries/json)
+include_directories(Libraries/Clara/include)
 
 # Compile options
 include(CMake/CompileOptions.cmake)
